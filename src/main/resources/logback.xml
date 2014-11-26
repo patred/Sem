@@ -1,0 +1,92 @@
+<configuration scan="true" debug="false">
+
+	<contextName>sem</contextName>
+	<jmxConfigurator />
+
+	<appender name="Sem-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.base}/logs/sem.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.base}/logs/sem.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%-25.-25thread] %-5level %logger{50} - %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="Sem-Iteration-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.base}/logs/sem-iteration.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.base}/logs/sem-iteration.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%-25.-25thread] %-5level %logger{50} - %message%n</pattern>
+		</encoder>
+	</appender>
+	
+	<appender name="Hib-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.base}/logs/sem-hibernate.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.base}/logs/sem-hibernate.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%-25.-25thread] %-5level %logger{50} - %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="HibStat-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.base}/logs/sem-hibernate-stat.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.base}/logs/sem-hibernate-stat.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%-25.-25thread] %-5level %logger{50} - %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<appender name="HibSql-FILE" class="ch.qos.logback.core.rolling.RollingFileAppender">
+		<file>${catalina.base}/logs/sem-hibernate-sql.log</file>
+		<rollingPolicy class="ch.qos.logback.core.rolling.TimeBasedRollingPolicy">
+			<fileNamePattern>${catalina.base}/logs/sem-hibernate-sql.%d{yyyy-MM-dd}.log.zip</fileNamePattern>
+			<maxHistory>31</maxHistory>
+		</rollingPolicy>
+		<encoder>
+			<pattern>%date [%-25.-25thread] %-5level %logger{50} - %message%n</pattern>
+		</encoder>
+	</appender>
+
+	<logger name="semiteration" level="DEBUG" additivity="false">
+		<appender-ref ref="Sem-Iteration-FILE" />
+	</logger>
+
+	<logger name="org.hibernate" level="WARN" additivity="false">
+		<appender-ref ref="Hib-FILE" />
+	</logger>
+	
+	<logger name="org.hibernate.stat" level="WARN" additivity="false">
+		<appender-ref ref="HibStat-FILE" />
+	</logger>
+
+	<logger name="org.hibernate.SQL" level="INFO" additivity="false">
+		<appender-ref ref="HibSql-FILE" />
+	</logger>
+
+	<logger name="org.hibernate.type.descriptor.sql.BasicBinder" level="INFO" additivity="false">
+		<appender-ref ref="HibSql-FILE" />
+	</logger>
+
+	<logger name="org.hibernate.type.EnumType" level="INFO" additivity="false">
+		<appender-ref ref="HibSql-FILE" />
+	</logger>
+
+	<logger name="org.hibernate.util.JDBCExceptionReporter" level="ERROR" additivity="false" />
+	<logger name="it.site" level="DEBUG" />
+	<root level="INFO">
+		<appender-ref ref="Sem-FILE" />
+		<appender-ref ref="Sem-EMAIL" />
+	</root>
+
+</configuration>

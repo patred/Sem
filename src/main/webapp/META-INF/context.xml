@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<Context>
+
+	<!-- initialSize="5" non va... -->
+
+	<Resource name="jdbc/confluence" auth="Container" type="javax.sql.DataSource"
+		driverClassName="com.mysql.jdbc.Driver"
+		url="DACONFIGURAZIONE"
+		username="DACONFIGURAZIONE"
+		password="DACONFIGURAZIONE"
+		maxActive="100"
+		maxIdle="10" minIdle="0" removeAbandoned="true"
+		removeAbandonedTimeout="120" logAbandoned="true" maxWait="5"
+		validationQuery="select 1 from dual" testWhileIdle="true"
+		timeBetweenEvictionRunsMillis="900000" numTestsPerEvictionRun="1"
+		minEvictableIdleTimeMillis="600000" poolPreparedStatements="true"
+		maxOpenPreparedStatements="100" />
+
+</Context> 
