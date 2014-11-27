@@ -3,3 +3,6 @@ bin
 .metadata
 *~
 target/
+.settings
+.project
+.classpath
