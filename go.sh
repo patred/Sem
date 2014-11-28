@@ -7,4 +7,5 @@ rm -rf /home/giuseppe/apache-tomcat-7.0.52/work/*
 
 mvn clean package
 cp target/sem.war /home/giuseppe/apache-tomcat-7.0.52/webapps
-sh /home/giuseppe/apache-tomcat-7.0.52/bin/startup.sh
+
+sh /home/giuseppe/apache-tomcat-7.0.52/bin/catalina.sh jpda start
