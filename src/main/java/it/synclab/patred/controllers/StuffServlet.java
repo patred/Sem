@@ -1,7 +1,7 @@
 package it.synclab.patred.controllers;
 
 import it.synclab.patred.persistence.User;
-import it.synclab.patred.services.UserService;
+import it.synclab.patred.persistence.services.UserService;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -64,6 +64,14 @@ public class StuffServlet extends BaseController {
 			return new it.synclab.patred.model.User();
 		it.synclab.patred.model.User user = new it.synclab.patred.model.User(stuff);
 		return user;
+	}
+	
+	@GET
+	@Path("login/{id}/{password}")
+	@Produces(MediaType.TEXT_HTML)
+	public String login(@PathParam("id") String id, @PathParam("password") String password) {
+		
+		return String.valueOf(userservice.authenticate(id, password));
 	}
 	
 }

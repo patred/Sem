@@ -4,31 +4,17 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
-import javax.persistence.NamedQueries;
-import javax.persistence.NamedQuery;
 import javax.persistence.Table;
 
-@NamedQueries({ @NamedQuery(name = "getAllUser", query = "select u from User u"),
-	@NamedQuery(name = "getByUsernameUser", query = "select u from User u where u.username = :username"),
-	@NamedQuery(name = "deleteAllUser", query = "delete from User u") })
 @Entity
-@Table
-public class User implements Serializable {
+@Table(name = "user", catalog = "test")
+public class Employee implements Serializable {
 	private static final long serialVersionUID = -3341290174467662162L;
 	
-	private String username;
 	private String name;
 	private String surname;
+	private String username;
 	private String password;
-	
-	@Id
-	public String getUsername() {
-		return username;
-	}
-	
-	public void setUsername(String username) {
-		this.username = username;
-	}
 	
 	public String getName() {
 		return name;
@@ -38,12 +24,21 @@ public class User implements Serializable {
 		this.name = name;
 	}
 	
+	@Id
 	public String getSurname() {
 		return surname;
 	}
 	
 	public void setSurname(String surname) {
 		this.surname = surname;
+	}
+	
+	public String getUsername() {
+		return username;
+	}
+	
+	public void setUsername(String username) {
+		this.username = username;
 	}
 	
 	public String getPassword() {
@@ -73,7 +68,7 @@ public class User implements Serializable {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		User other = (User) obj;
+		Employee other = (Employee) obj;
 		if (name == null) {
 			if (other.name != null)
 				return false;

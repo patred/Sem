@@ -1,16 +1,16 @@
 package it.synclab.patred.listener;
 
+import it.synclab.patred.annotations.NoTransactional;
+import it.synclab.patred.annotations.Transactional;
 import it.synclab.patred.aop.LogInterceptor;
+import it.synclab.patred.aop.TransactionInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContextEvent;
-import javax.sql.DataSource;
 
-import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -55,16 +55,17 @@ public class ApplicationListener extends GuiceServletContextListener {
 						LogInterceptor logInterceptor = new LogInterceptor();
 						bindInterceptor(Matchers.inSubpackage(myControllerPkg), Matchers.any(), logInterceptor);
 						
-						/*
-						 * TransactionInterceptor transactionInterceptor = new
-						 * TransactionInterceptor();
-						 * requestInjection(transactionInterceptor);
-						 * 
-						 * bindInterceptor(Matchers.any(), Matchers.any(),
-						 * transactionInterceptor);
-						 */
+						TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
+						requestInjection(transactionInterceptor);
+						bindInterceptor(Matchers.annotatedWith(Transactional.class), Matchers.not(Matchers.annotatedWith(NoTransactional.class)), transactionInterceptor);
+						
 					}
 				});
+				
+				/*
+				 * HibernateSessionService hbService = new
+				 * HibernateSessionService(); hbService.getSessionFactory();
+				 */
 			}
 		});
 		
@@ -84,21 +85,27 @@ public class ApplicationListener extends GuiceServletContextListener {
 		
 		try {
 			InitialContext ic = new InitialContext();
-			Context xmlContext = (Context) ic.lookup("java:comp/env");
+			// Context xmlContext = (Context) ic.lookup("java:comp/env");
 			
-			Object lookup = xmlContext.lookup("jdbc/confluence");
-			BasicDataSource bds = null;
-			DataSource ds = null;
-			if (lookup instanceof BasicDataSource) {
-				bds = (BasicDataSource) lookup;
-				logger.info("{}:{}:{}", new Object[] { bds.getUrl(), bds.getUsername(), bds.getPassword() });
-			} else {
-				ds = (DataSource) lookup;
-				logger.info("{}:{}:{}", new Object[] { ((BasicDataSource) ds).getUrl(), ((BasicDataSource) ds).getUsername(), ((BasicDataSource) ds).getPassword() });
-			}
+			// Object lookup = xmlContext.lookup("java:jdbc/confluence");
+			// logger.info("lookup: " + lookup.getClass().getCanonicalName());
+			
+			// BasicDataSource bds = null;
+			// DataSource ds = null;
+			// if (lookup instanceof BasicDataSource) {
+			// bds = (BasicDataSource) lookup;
+			// logger.info("{}:{}:{}", new Object[] { bds.getUrl(),
+			// bds.getUsername(), bds.getPassword() });
+			// } else {
+			// ds = (DataSource) lookup;
+			// logger.info("{}:{}:{}", new Object[] { ((BasicDataSource)
+			// ds).getUrl(), ((BasicDataSource) ds).getUsername(),
+			// ((BasicDataSource) ds).getPassword() });
+			// }
 			
 		} catch (Exception e) {
-			e.printStackTrace();
+			logger.error(e.getMessage());
+			
 		}
 	}
 }

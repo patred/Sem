@@ -32,7 +32,7 @@ public class BasePersistentService<T> {
 		return getAll(Integer.MAX_VALUE);
 	}
 	
-	@SuppressWarnings({ "unchecked", "rawtypes" })
+	@SuppressWarnings({ "unchecked" })
 	public List<T> getAll(Integer maxResult) {
 		Class clazz = (Class) getClass().getGenericSuperclass();
 		String fullname = ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0].toString();
@@ -42,7 +42,6 @@ public class BasePersistentService<T> {
 		return (List<T>) query.list();
 	}
 	
-	@SuppressWarnings("rawtypes")
 	public void deleteAll() {
 		Class clazz = (Class) getClass().getGenericSuperclass();
 		String fullname = ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0].toString();

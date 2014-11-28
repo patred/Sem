@@ -86,7 +86,6 @@
 	<logger name="it.site" level="DEBUG" />
 	<root level="INFO">
 		<appender-ref ref="Sem-FILE" />
-		<appender-ref ref="Sem-EMAIL" />
 	</root>
 
 </configuration>
