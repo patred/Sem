@@ -4,12 +4,16 @@ import java.io.Serializable;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
+import javax.persistence.GeneratedValue;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
+
+import org.hibernate.annotations.GenericGenerator;
+import org.hibernate.annotations.Parameter;
 
 @NamedQueries({ @NamedQuery(name = "getAllManager", query = "select m from Manager m"), @NamedQuery(name = "deleteAllManager", query = "delete from Manager m") })
 @Entity
@@ -22,7 +26,14 @@ public class Manager implements Serializable {
 	private User user;
 	private String role;
 	
+	public Manager() {
+	}
+	
+	public Manager(String role) {
+	}
+	
 	@Id
+	@GeneratedValue
 	public Integer getManagerId() {
 		return ManagerId;
 	}

@@ -4,12 +4,18 @@ import it.synclab.patred.annotations.NoTransactional;
 import it.synclab.patred.annotations.Transactional;
 import it.synclab.patred.aop.LogInterceptor;
 import it.synclab.patred.aop.TransactionInterceptor;
+import it.synclab.patred.aop.TrimAndNullInterceptor;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.naming.InitialContext;
 import javax.servlet.ServletContextEvent;
+import javax.ws.rs.DELETE;
+import javax.ws.rs.GET;
+import javax.ws.rs.POST;
+import javax.ws.rs.PUT;
+import javax.ws.rs.Path;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -37,12 +43,11 @@ public class ApplicationListener extends GuiceServletContextListener {
 			protected void configureServlets() {
 				super.configureServlets();
 				
-				final String myControllerPkg = "it.synclab.patred.controllers";
 				Map<String, String> params = new HashMap<String, String>();
 				
 				params.put("com.sun.jersey.config.feature.ImplicitViewables", "false");
 				params.put("com.sun.jersey.config.feature.Redirect", "true");
-				params.put("com.sun.jersey.config.property.packages", myControllerPkg);
+				params.put("com.sun.jersey.config.property.packages", "it.synclab.patred");
 				params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX, ".*\\.(htm|html|css|js|jsp|png|jpeg|jpg|gif)$");
 				params.put("com.sun.jersey.spi.container.ResourceFilters", "com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory");
 				
@@ -53,7 +58,11 @@ public class ApplicationListener extends GuiceServletContextListener {
 					@Override
 					public void configure(Binder binder) {
 						LogInterceptor logInterceptor = new LogInterceptor();
-						bindInterceptor(Matchers.inSubpackage(myControllerPkg), Matchers.any(), logInterceptor);
+						TrimAndNullInterceptor trimAndNullInterceptor = new TrimAndNullInterceptor();
+						bindInterceptor(
+								Matchers.annotatedWith(Path.class),
+								Matchers.annotatedWith(GET.class).or(Matchers.annotatedWith(POST.class)).or(Matchers.annotatedWith(PUT.class))
+										.or(Matchers.annotatedWith(DELETE.class)), trimAndNullInterceptor, logInterceptor);
 						
 						TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
 						requestInjection(transactionInterceptor);
@@ -62,10 +71,6 @@ public class ApplicationListener extends GuiceServletContextListener {
 					}
 				});
 				
-				/*
-				 * HibernateSessionService hbService = new
-				 * HibernateSessionService(); hbService.getSessionFactory();
-				 */
 			}
 		});
 		

@@ -2,7 +2,6 @@ package it.synclab.patred.persistence;
 
 import java.io.Serializable;
 
-import javax.management.relation.Role;
 import javax.persistence.CascadeType;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
@@ -23,12 +22,17 @@ public class User implements Serializable {
 	private String name;
 	private String surname;
 	private String password;
-	private Role role;
+	private Roles role;
 	private Employee employee;
 	private Manager manager;
 	
 	public User() {
 		
+	}
+	
+	public User(String username, String password) {
+		this.username = username;
+		this.password = password;
 	}
 	
 	@Id
@@ -58,11 +62,11 @@ public class User implements Serializable {
 		this.manager = manager;
 	}
 	
-	public Role getRole() {
+	public Roles getRole() {
 		return role;
 	}
 	
-	public void setRole(Role role) {
+	public void setRole(Roles role) {
 		this.role = role;
 	}
 	
