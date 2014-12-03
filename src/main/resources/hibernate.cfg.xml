@@ -12,14 +12,12 @@
 		<property name="hibernate.connection.username">root</property>
 		<property name="hibernate.dialect">org.hibernate.dialect.MySQLDialect</property>
 		<property name="show_sql">true</property>
-		<!-- property name="hbm2ddl.auto">create</property-->
+		<property name="hbm2ddl.auto">update</property>
 		<property name="generate_statistics">true</property>
 
 		<mapping class="it.synclab.patred.persistence.User" />
-		<!-- mapping class="it.site.antonio.persistence.entities.Author" /> <mapping 
-			class="it.site.antonio.persistence.entities.Mail" /> <mapping class="it.site.antonio.persistence.entities.Number" 
-			/> <mapping class="it.site.antonio.persistence.entities.Event" /> <mapping 
-			class="it.site.antonio.persistence.entities.Organizer" / -->
+		<mapping class="it.synclab.patred.persistence.Employee" />
+		<mapping class="it.synclab.patred.persistence.Manager" />
 	</session-factory>
 </hibernate-configuration>
 

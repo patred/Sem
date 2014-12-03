@@ -3,60 +3,66 @@ package it.synclab.patred.persistence;
 import java.io.Serializable;
 
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.NamedQueries;
+import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
+import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
+@NamedQueries({ @NamedQuery(name = "getAllEmployee", query = "select u from Employee u"), @NamedQuery(name = "deleteAllEmployee", query = "delete from Employee u") })
 @Entity
-@Table(name = "user", catalog = "test")
+@Table
 public class Employee implements Serializable {
-	private static final long serialVersionUID = -3341290174467662162L;
 	
-	private String name;
-	private String surname;
-	private String username;
-	private String password;
-	
-	public String getName() {
-		return name;
-	}
-	
-	public void setName(String name) {
-		this.name = name;
-	}
+	private static final long serialVersionUID = -1378102048195683176L;
+
+	private Integer EmployeeId;
+	private User user;
+	private String role;
+	private Integer calendarId;
 	
 	@Id
-	public String getSurname() {
-		return surname;
+	public Integer getEmployeeId() {
+		return EmployeeId;
 	}
 	
-	public void setSurname(String surname) {
-		this.surname = surname;
+	public void setEmployeeId(Integer employeeId) {
+		EmployeeId = employeeId;
 	}
 	
-	public String getUsername() {
-		return username;
+	public String getRole() {
+		return role;
 	}
 	
-	public void setUsername(String username) {
-		this.username = username;
+	public void setRole(String role) {
+		this.role = role;
 	}
 	
-	public String getPassword() {
-		return password;
+	@OneToOne(fetch = FetchType.LAZY)
+	@PrimaryKeyJoinColumn
+	public User getUser() {
+		return user;
 	}
 	
-	public void setPassword(String password) {
-		this.password = password;
+	public void setUser(User user) {
+		this.user = user;
+	}
+	
+	public Integer getCalendarId() {
+		return calendarId;
+	}
+	
+	public void setCalendarId(Integer calendarId) {
+		this.calendarId = calendarId;
 	}
 	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
-		result = prime * result + ((username == null) ? 0 : username.hashCode());
+		result = prime * result + ((EmployeeId == null) ? 0 : EmployeeId.hashCode());
 		return result;
 	}
 	
@@ -69,32 +75,17 @@ public class Employee implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		Employee other = (Employee) obj;
-		if (name == null) {
-			if (other.name != null)
+		if (EmployeeId == null) {
+			if (other.EmployeeId != null)
 				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (surname == null) {
-			if (other.surname != null)
-				return false;
-		} else if (!surname.equals(other.surname))
-			return false;
-		if (username == null) {
-			if (other.username != null)
-				return false;
-		} else if (!username.equals(other.username))
+		} else if (!EmployeeId.equals(other.EmployeeId))
 			return false;
 		return true;
 	}
-	
+
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", surname=" + surname + ", username=" + username + ", password=" + password + "]";
+		return "Employee [EmployeeId=" + EmployeeId + ", user=" + user + ", role=" + role + ", calendarId=" + calendarId + "]";
 	}
 	
 }

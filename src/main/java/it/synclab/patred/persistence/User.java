@@ -2,15 +2,18 @@ package it.synclab.patred.persistence;
 
 import java.io.Serializable;
 
+import javax.management.relation.Role;
+import javax.persistence.CascadeType;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 
 @NamedQueries({ @NamedQuery(name = "getAllUser", query = "select u from User u"),
-	@NamedQuery(name = "getByUsernameUser", query = "select u from User u where u.username = :username"),
-	@NamedQuery(name = "deleteAllUser", query = "delete from User u") })
+		@NamedQuery(name = "getByUsernameUser", query = "select u from User u where u.username = :username"), @NamedQuery(name = "deleteAllUser", query = "delete from User u") })
 @Entity
 @Table
 public class User implements Serializable {
@@ -20,6 +23,13 @@ public class User implements Serializable {
 	private String name;
 	private String surname;
 	private String password;
+	private Role role;
+	private Employee employee;
+	private Manager manager;
+	
+	public User() {
+		
+	}
 	
 	@Id
 	public String getUsername() {
@@ -28,6 +38,32 @@ public class User implements Serializable {
 	
 	public void setUsername(String username) {
 		this.username = username;
+	}
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public Employee getEmployee() {
+		return employee;
+	}
+	
+	public void setEmployee(Employee employee) {
+		this.employee = employee;
+	}
+	
+	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	public Manager getManager() {
+		return manager;
+	}
+	
+	public void setManager(Manager manager) {
+		this.manager = manager;
+	}
+	
+	public Role getRole() {
+		return role;
+	}
+	
+	public void setRole(Role role) {
+		this.role = role;
 	}
 	
 	public String getName() {
@@ -58,9 +94,6 @@ public class User implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((name == null) ? 0 : name.hashCode());
-		result = prime * result + ((password == null) ? 0 : password.hashCode());
-		result = prime * result + ((surname == null) ? 0 : surname.hashCode());
 		result = prime * result + ((username == null) ? 0 : username.hashCode());
 		return result;
 	}
@@ -74,21 +107,6 @@ public class User implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		User other = (User) obj;
-		if (name == null) {
-			if (other.name != null)
-				return false;
-		} else if (!name.equals(other.name))
-			return false;
-		if (password == null) {
-			if (other.password != null)
-				return false;
-		} else if (!password.equals(other.password))
-			return false;
-		if (surname == null) {
-			if (other.surname != null)
-				return false;
-		} else if (!surname.equals(other.surname))
-			return false;
 		if (username == null) {
 			if (other.username != null)
 				return false;
@@ -99,7 +117,7 @@ public class User implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "User [name=" + name + ", surname=" + surname + ", username=" + username + ", password=" + password + "]";
+		return "User [username=" + username + ", name=" + name + ", surname=" + surname + ", password=" + password + ", role=" + role + "]";
 	}
 	
 }
