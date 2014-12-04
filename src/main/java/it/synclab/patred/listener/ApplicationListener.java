@@ -94,26 +94,24 @@ public class ApplicationListener extends GuiceServletContextListener {
 	
 	public void changeContext(Constants constant) {
 		try {
-			InitialContext ic = new InitialContext();
-			Context xmlContext = (Context) ic.lookup("java:comp/env");
+			// Get DataSource
+			Context ctx = new InitialContext();
+			Object lookup = ctx.lookup("java:comp/env/jdbc/database");
+			// Get Connection and Statement
 			
-			Object lookup = xmlContext.lookup("jdbc/confluence");
 			logger.info("lookup: " + lookup.getClass().getCanonicalName());
 			
-			logger.info("{}:{}:{}", new Object[] { constant.getUrlDB(), constant.getUserDB(), constant.getPasswordDB() });
+			logger.debug("{}:{}:{}", new Object[] { constant.getUrlDB(), constant.getUserDB(), constant.getPasswordDB() });
 			
 			BasicDataSource bds = null;
 			DataSource ds = null;
-			// if (lookup instanceof BasicDataSource) {
-			// bds = (BasicDataSource) lookup;
-			// logger.info("{}:{}:{}", new Object[] { bds.getUrl(),
-			// bds.getUsername(), bds.getPassword() });
-			// } else {
-			// ds = (DataSource) lookup;
-			// logger.info("{}:{}:{}", new Object[] { ((BasicDataSource)
-			// ds).getUrl(), ((BasicDataSource) ds).getUsername(),
-			// ((BasicDataSource) ds).getPassword() });
-			// }
+			if (lookup instanceof BasicDataSource) {
+				bds = (BasicDataSource) lookup;
+				logger.info("{}:{}:{}", new Object[] { bds.getUrl(), bds.getUsername(), bds.getPassword() });
+			} else {
+				ds = (DataSource) lookup;
+				logger.info("{}:{}:{}", new Object[] { ((BasicDataSource) ds).getUrl(), ((BasicDataSource) ds).getUsername(), ((BasicDataSource) ds).getPassword() });
+			}
 			
 		} catch (Exception e) {
 			logger.error(e.getMessage());

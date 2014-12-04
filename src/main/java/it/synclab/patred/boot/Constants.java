@@ -82,8 +82,7 @@ public class Constants {
 		}
 		
 		/*
-		 * TODO
-		 * Esplicitare gli hostname
+		 * TODO Esplicitare gli hostname
 		 */
 		if (this.hostname == null) {
 			this.hostname = "localhost";
