@@ -5,10 +5,9 @@
 	id="WebApp_ID" version="2.5">
 
 	<display-name>Synclab Employees Manager</display-name>
-    
+
 	<listener>
-		<listener-class>it.synclab.patred.listener.ApplicationListener
-		</listener-class>
+		<listener-class>it.synclab.patred.listener.ApplicationListener</listener-class>
 	</listener>
 
 	<session-config>
@@ -26,5 +25,11 @@
 		<url-pattern>/application.wadl</url-pattern>
 		<url-pattern>/application.wadl/*</url-pattern>
 	</filter-mapping>
-	
+
+	<resource-ref>
+		<res-ref-name>jdbc/database</res-ref-name>
+		<res-type>javax.sql.DataSource</res-type>
+		<res-auth>Container</res-auth>
+	</resource-ref>
+
 </web-app>

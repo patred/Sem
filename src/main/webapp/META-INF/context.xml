@@ -2,10 +2,14 @@
 <Context>
 
 	<!-- initialSize="5" non va... -->
-
+		<!-- 
+		url="DACONFIGURAZIONE"
+		username="DACONFIGURAZIONE"
+		password="DACONFIGURAZIONE"
+		 -->
 	<Resource name="jdbc/confluence" auth="Container" type="javax.sql.DataSource"
 		driverClassName="com.mysql.jdbc.Driver"
-		url="localhost:3306"
+		url="localhost:3306/sem"
 		username="root"
 		password="Patred113"
 		maxActive="100"
