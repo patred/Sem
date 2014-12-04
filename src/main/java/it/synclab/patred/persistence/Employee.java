@@ -12,9 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 @NamedQueries({ @NamedQuery(name = "getAllEmployee", query = "select u from Employee u"), @NamedQuery(name = "deleteAllEmployee", query = "delete from Employee u") })
 @Entity
 @Table

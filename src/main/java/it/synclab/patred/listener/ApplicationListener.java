@@ -5,18 +5,22 @@ import it.synclab.patred.annotations.Transactional;
 import it.synclab.patred.aop.LogInterceptor;
 import it.synclab.patred.aop.TransactionInterceptor;
 import it.synclab.patred.aop.TrimAndNullInterceptor;
+import it.synclab.patred.boot.Constants;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import javax.naming.Context;
 import javax.naming.InitialContext;
 import javax.servlet.ServletContextEvent;
+import javax.sql.DataSource;
 import javax.ws.rs.DELETE;
 import javax.ws.rs.GET;
 import javax.ws.rs.POST;
 import javax.ws.rs.PUT;
 import javax.ws.rs.Path;
 
+import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -77,26 +81,29 @@ public class ApplicationListener extends GuiceServletContextListener {
 	}
 	
 	@Override
-	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		logger.info("contextDestroyed...");
-		super.contextDestroyed(servletContextEvent);
-		
-	}
-	
-	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
 		logger.info("contextInitialized...");
 		super.contextInitialized(servletContextEvent);
 		
+		Injector injector = getInjector();
+		Constants constant = new Constants(injector);
+		
+		changeContext(constant);
+		
+	}
+	
+	public void changeContext(Constants constant) {
 		try {
 			InitialContext ic = new InitialContext();
-			// Context xmlContext = (Context) ic.lookup("java:comp/env");
+			Context xmlContext = (Context) ic.lookup("java:comp/env");
 			
-			// Object lookup = xmlContext.lookup("java:jdbc/confluence");
-			// logger.info("lookup: " + lookup.getClass().getCanonicalName());
+			Object lookup = xmlContext.lookup("jdbc/confluence");
+			logger.info("lookup: " + lookup.getClass().getCanonicalName());
 			
-			// BasicDataSource bds = null;
-			// DataSource ds = null;
+			logger.info("{}:{}:{}", new Object[] { constant.getUrlDB(), constant.getUserDB(), constant.getPasswordDB() });
+			
+			BasicDataSource bds = null;
+			DataSource ds = null;
 			// if (lookup instanceof BasicDataSource) {
 			// bds = (BasicDataSource) lookup;
 			// logger.info("{}:{}:{}", new Object[] { bds.getUrl(),
@@ -112,5 +119,12 @@ public class ApplicationListener extends GuiceServletContextListener {
 			logger.error(e.getMessage());
 			
 		}
+	}
+	
+	@Override
+	public void contextDestroyed(ServletContextEvent servletContextEvent) {
+		logger.info("contextDestroyed...");
+		super.contextDestroyed(servletContextEvent);
+		
 	}
 }

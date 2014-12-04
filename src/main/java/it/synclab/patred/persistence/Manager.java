@@ -12,9 +12,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.GenericGenerator;
-import org.hibernate.annotations.Parameter;
-
 @NamedQueries({ @NamedQuery(name = "getAllManager", query = "select m from Manager m"), @NamedQuery(name = "deleteAllManager", query = "delete from Manager m") })
 @Entity
 @Table
@@ -30,6 +27,7 @@ public class Manager implements Serializable {
 	}
 	
 	public Manager(String role) {
+		this.role = role;
 	}
 	
 	@Id
