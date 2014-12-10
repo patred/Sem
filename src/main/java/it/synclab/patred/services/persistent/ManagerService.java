@@ -1,7 +1,7 @@
-package it.synclab.patred.persistence.services;
+package it.synclab.patred.services.persistent;
 
 import it.synclab.patred.annotations.Transactional;
-import it.synclab.patred.persistence.Manager;
+import it.synclab.patred.persistence.entities.Manager;
 
 import javax.inject.Singleton;
 

@@ -1,9 +1,9 @@
-package it.synclab.patred.controllers;
+package it.synclab.patred.webcontrollers;
 
-import it.synclab.patred.persistence.User;
-import it.synclab.patred.persistence.services.UserService;
+import it.synclab.patred.annotations.Transactional;
+import it.synclab.patred.persistence.entities.User;
+import it.synclab.patred.services.persistent.UserService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -13,8 +13,11 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
+import org.hibernate.Hibernate;
+
 import com.sun.jersey.spi.resource.PerRequest;
 
+@Transactional
 @PerRequest
 @Path("services/stuff")
 public class StuffServlet extends BaseController {
@@ -29,28 +32,27 @@ public class StuffServlet extends BaseController {
 	@GET
 	@Path("json")
 	@Produces(MediaType.APPLICATION_JSON)
-	public List<it.synclab.patred.model.User> getAllJson() {
+	public List<User> getAllJson() {
 		
 		return getAll();
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public List<it.synclab.patred.model.User> getAll() {
-		
-		List<it.synclab.patred.model.User> users = new ArrayList<it.synclab.patred.model.User>();
-		
-		for (User stuff : userservice.getAll()) {
-			users.add(new it.synclab.patred.model.User(stuff));
+	public List<User> getAll() {
+		List<User> all = userservice.getAll();
+		for (User user : all) {
+			Hibernate.initialize(user.getEmployee());
+			Hibernate.initialize(user.getManager());
+
 		}
-		
-		return users;
+		return userservice.getAll();
 	}
 	
 	@GET
 	@Path("json/{id}")
 	@Produces(MediaType.APPLICATION_JSON)
-	public it.synclab.patred.model.User getByIdJson(@PathParam("id") String id) {
+	public User getByIdJson(@PathParam("id") String id) {
 		
 		return getById(id);
 	}
@@ -58,11 +60,12 @@ public class StuffServlet extends BaseController {
 	@GET
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
-	public it.synclab.patred.model.User getById(@PathParam("id") String id) {
-		User stuff = userservice.getUserFromUsername(id);
-		if (stuff == null)
-			return new it.synclab.patred.model.User();
-		it.synclab.patred.model.User user = new it.synclab.patred.model.User(stuff);
+	public User getById(@PathParam("id") String id) {
+		User user = userservice.getUserFromUsername(id);
+		if (user == null)
+			return new User();
+		Hibernate.initialize(user.getEmployee());
+		Hibernate.initialize(user.getManager());
 		return user;
 	}
 	

@@ -1,20 +1,22 @@
-package it.synclab.patred.persistence;
+package it.synclab.patred.persistence.entities;
 
 import java.io.Serializable;
 
-import javax.persistence.CascadeType;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
+import javax.persistence.UniqueConstraint;
+import javax.xml.bind.annotation.XmlRootElement;
 
+@Entity
+@Table(name = "Users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
+@XmlRootElement
 @NamedQueries({ @NamedQuery(name = "getAllUser", query = "select u from User u"),
 		@NamedQuery(name = "getByUsernameUser", query = "select u from User u where u.username = :username"), @NamedQuery(name = "deleteAllUser", query = "delete from User u") })
-@Entity
-@Table
 public class User implements Serializable {
 	private static final long serialVersionUID = -3341290174467662162L;
 	
@@ -27,12 +29,19 @@ public class User implements Serializable {
 	private Manager manager;
 	
 	public User() {
-		
+		this.role = Roles.Empty;
 	}
 	
 	public User(String username, String password) {
 		this.username = username;
 		this.password = password;
+		this.role = Roles.Empty;
+	}
+	
+	public User(String username, String password, Roles role) {
+		this.username = username;
+		this.password = password;
+		this.role = role;
 	}
 	
 	@Id
@@ -44,7 +53,8 @@ public class User implements Serializable {
 		this.username = username;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(unique = true)
 	public Employee getEmployee() {
 		return employee;
 	}
@@ -53,7 +63,8 @@ public class User implements Serializable {
 		this.employee = employee;
 	}
 	
-	@OneToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+	@OneToOne
+	@JoinColumn(unique = true)
 	public Manager getManager() {
 		return manager;
 	}
@@ -121,7 +132,8 @@ public class User implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", name=" + name + ", surname=" + surname + ", password=" + password + ", role=" + role + "]";
+		return "User [username=" + username + ", name=" + name + ", surname=" + surname + ", password=" + password + ", role=" + role + ", employee=" + employee + ", manager="
+				+ manager + "]";
 	}
 	
 }
