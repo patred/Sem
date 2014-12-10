@@ -1,127 +1,172 @@
 package it.synclab.patred.listener;
 
-import it.synclab.patred.annotations.NoTransactional;
-import it.synclab.patred.annotations.Transactional;
-import it.synclab.patred.aop.LogInterceptor;
-import it.synclab.patred.aop.TransactionInterceptor;
-import it.synclab.patred.aop.TrimAndNullInterceptor;
+import it.synclab.patred.boot.BootstrapAdminAndEmployee;
 import it.synclab.patred.boot.Constants;
+import it.synclab.patred.modules.SemWebModule;
+import it.synclab.patred.services.persistent.HibernateSessionService;
+import it.synclab.patred.util.LogUtils;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.List;
+import java.util.Set;
 
+import javax.management.MBeanServer;
+import javax.management.MBeanServerFactory;
+import javax.management.ObjectName;
 import javax.naming.Context;
 import javax.naming.InitialContext;
+import javax.naming.NamingException;
 import javax.servlet.ServletContextEvent;
 import javax.sql.DataSource;
-import javax.ws.rs.DELETE;
-import javax.ws.rs.GET;
-import javax.ws.rs.POST;
-import javax.ws.rs.PUT;
-import javax.ws.rs.Path;
 
-import org.apache.tomcat.dbcp.dbcp.BasicDataSource;
+import oracle.ucp.UniversalConnectionPoolException;
+import oracle.ucp.admin.UniversalConnectionPoolManagerImpl;
+import oracle.ucp.jdbc.PoolDataSourceImpl;
+
+import org.hibernate.jmx.StatisticsService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.slf4j.bridge.SLF4JBridgeHandler;
 
-import com.google.inject.Binder;
+import ch.qos.logback.classic.LoggerContext;
+
 import com.google.inject.Guice;
 import com.google.inject.Injector;
-import com.google.inject.Module;
-import com.google.inject.matcher.Matchers;
 import com.google.inject.servlet.GuiceServletContextListener;
-import com.sun.jersey.guice.JerseyServletModule;
-import com.sun.jersey.guice.spi.container.servlet.GuiceContainer;
-import com.sun.jersey.spi.container.servlet.ServletContainer;
 
 public class ApplicationListener extends GuiceServletContextListener {
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private static Logger logger = LoggerFactory.getLogger(LogUtils.formatClassName(ApplicationListener.class));
 	
-	@Override
-	protected Injector getInjector() {
-		logger.info("getInjector...");
-		
-		return Guice.createInjector(new JerseyServletModule() {
-			
-			@Override
-			protected void configureServlets() {
-				super.configureServlets();
-				
-				Map<String, String> params = new HashMap<String, String>();
-				
-				params.put("com.sun.jersey.config.feature.ImplicitViewables", "false");
-				params.put("com.sun.jersey.config.feature.Redirect", "true");
-				params.put("com.sun.jersey.config.property.packages", "it.synclab.patred");
-				params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX, ".*\\.(htm|html|css|js|jsp|png|jpeg|jpg|gif)$");
-				params.put("com.sun.jersey.spi.container.ResourceFilters", "com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory");
-				
-				filter("/*").through(GuiceContainer.class, params);
-				
-				install(new Module() {
-					
-					@Override
-					public void configure(Binder binder) {
-						LogInterceptor logInterceptor = new LogInterceptor();
-						TrimAndNullInterceptor trimAndNullInterceptor = new TrimAndNullInterceptor();
-						bindInterceptor(
-								Matchers.annotatedWith(Path.class),
-								Matchers.annotatedWith(GET.class).or(Matchers.annotatedWith(POST.class)).or(Matchers.annotatedWith(PUT.class))
-										.or(Matchers.annotatedWith(DELETE.class)), trimAndNullInterceptor, logInterceptor);
-						
-						TransactionInterceptor transactionInterceptor = new TransactionInterceptor();
-						requestInjection(transactionInterceptor);
-						bindInterceptor(Matchers.annotatedWith(Transactional.class), Matchers.not(Matchers.annotatedWith(NoTransactional.class)), transactionInterceptor);
-						
-					}
-				});
-				
-			}
-		});
-		
-	}
+	private final static String HIBERSTATS_HIEARCHY_DEFAULT = "sem.hibernate:type=statistics";
+	
+	private Injector injector;
+	
+	private PoolDataSourceImpl semDbPoolDataSourceImpl;
 	
 	@Override
 	public void contextInitialized(ServletContextEvent servletContextEvent) {
-		logger.info("contextInitialized...");
 		super.contextInitialized(servletContextEvent);
 		
-		Injector injector = getInjector();
-		Constants constant = new Constants(injector);
-		
-		changeContext(constant);
+		logger.info("Start Application - contextInitialized");
 		
 	}
 	
-	public void changeContext(Constants constant) {
+	@Override
+	protected Injector getInjector() {
+		logger.info("create INJECTOR...");
+		
+		injector = Guice.createInjector(new SemWebModule());
+		
+		SLF4JBridgeHandler.install();
+		
+		changeContextParameter();
+		/**
+		 * TODO deprecated version 4.x of hivernate check alternative
+		 * registerHibernateStatistics();
+		 */
+		
+		checkAllDefaultDataOnBD();
+		return injector;
+		
+	}
+	
+	private void changeContextParameter() {
+		
+		Context initContext = null;
 		try {
-			// Get DataSource
-			Context ctx = new InitialContext();
-			Object lookup = ctx.lookup("java:comp/env/jdbc/database");
-			// Get Connection and Statement
 			
-			logger.info("lookup: " + lookup.getClass().getCanonicalName());
+			Constants constants = injector.getInstance(Constants.class);
 			
-			logger.debug("{}:{}:{}", new Object[] { constant.getUrlDB(), constant.getUserDB(), constant.getPasswordDB() });
+			initContext = new InitialContext();
 			
-			BasicDataSource bds = null;
-			DataSource ds = null;
-			if (lookup instanceof BasicDataSource) {
-				bds = (BasicDataSource) lookup;
-				logger.info("{}:{}:{}", new Object[] { bds.getUrl(), bds.getUsername(), bds.getPassword() });
-			} else {
-				ds = (DataSource) lookup;
-				logger.info("{}:{}:{}", new Object[] { ((BasicDataSource) ds).getUrl(), ((BasicDataSource) ds).getUsername(), ((BasicDataSource) ds).getPassword() });
-			}
+			DataSource ds = (DataSource) initContext.lookup("java:comp/env/jdbc/semDbConnPool");
+			
+			semDbPoolDataSourceImpl = (PoolDataSourceImpl) ds;
+			semDbPoolDataSourceImpl.setURL(constants.getUrlDB());
+			semDbPoolDataSourceImpl.setUser(constants.getUserDB());
+			semDbPoolDataSourceImpl.setPassword(constants.getPasswordDB());
+			
+			logger.info("context.xml changed.");
 			
 		} catch (Exception e) {
-			logger.error(e.getMessage());
-			
+			logger.error("Exception", e);
+		} finally {
+			if (initContext != null) {
+				try {
+					initContext.close();
+				} catch (NamingException e) {
+					logger.warn("Can't close Initial Context", e);
+				}
+			}
 		}
+	}
+	
+	/**
+	 * TODO
+	 */
+	private void registerHibernateStatistics() {
+		
+		HibernateSessionService hibernateSessionService = injector.getInstance(HibernateSessionService.class);
+		
+		MBeanServer mbeanServer = findMBeanServer();
+		
+		try {
+			ObjectName objectName = new ObjectName(HIBERSTATS_HIEARCHY_DEFAULT);
+			
+			StatisticsService mBean = new StatisticsService();
+			mBean.setStatisticsEnabled(true);
+			mBean.setSessionFactory(hibernateSessionService.getSessionFactory());
+			mbeanServer.registerMBean(mBean, objectName);
+			logger.info("Register hibernate statistics mbean successfull");
+			
+		} catch (Exception e) {
+			logger.error("Cannot register mbean hibernate statistics", e);
+		}
+	}
+	
+	private MBeanServer findMBeanServer() {
+		List<MBeanServer> serverList = MBeanServerFactory.findMBeanServer(null);
+		if (serverList == null || serverList.size() == 0)
+			return null;
+		return serverList.get(0);
+	}
+	
+	private void checkAllDefaultDataOnBD() {
+		
+		BootstrapAdminAndEmployee boot = injector.getInstance(BootstrapAdminAndEmployee.class);
+		boot.run();
 	}
 	
 	@Override
 	public void contextDestroyed(ServletContextEvent servletContextEvent) {
-		logger.info("contextDestroyed...");
+		
+		logger.info("Destroy application...");
+		
+		try {
+			MBeanServer server = findMBeanServer();
+			ObjectName qmbo = new ObjectName("sem.hibernate:*");
+			Set<ObjectName> names = server.queryNames(qmbo, null);
+			for (ObjectName name : names)
+				server.unregisterMBean(name);
+			logger.info("Unregister hibernate statistics mbean successfull");
+		} catch (Exception e) {
+			logger.error("[contextDestroyed]: Exception catched: ", e);
+		}
+		
+		HibernateSessionService hibernateSessionService = injector.getInstance(HibernateSessionService.class);
+		hibernateSessionService.shutdown();
+		
+		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+		lc.stop();
+		
+		String poolName = semDbPoolDataSourceImpl.getConnectionPoolName();
+		try {
+			
+			UniversalConnectionPoolManagerImpl.getUniversalConnectionPoolManager().destroyConnectionPool(poolName);
+			
+		} catch (UniversalConnectionPoolException e) {
+			logger.error("Error destroing UniversalConnectionPool " + poolName + ". ", e);
+		}
+		
 		super.contextDestroyed(servletContextEvent);
 		
 	}

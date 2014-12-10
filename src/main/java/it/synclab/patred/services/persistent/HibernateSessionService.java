@@ -1,4 +1,6 @@
-package it.synclab.patred.persistence;
+package it.synclab.patred.services.persistent;
+
+import it.synclab.patred.util.LogUtils;
 
 import java.util.Properties;
 
@@ -14,7 +16,7 @@ import com.google.inject.Singleton;
 @Singleton
 public class HibernateSessionService {
 	
-	private Logger logger = LoggerFactory.getLogger(this.getClass());
+	private Logger logger = LoggerFactory.getLogger(LogUtils.formatClassName(this.getClass()));
 	
 	private SessionFactory sessionFactory;
 	

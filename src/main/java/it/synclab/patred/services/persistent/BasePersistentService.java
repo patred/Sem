@@ -1,19 +1,17 @@
-package it.synclab.patred.persistence.services;
+package it.synclab.patred.services.persistent;
 
 import it.synclab.patred.annotations.NoTransactional;
+import it.synclab.patred.services.BaseService;
 
 import java.lang.reflect.ParameterizedType;
 import java.util.List;
 
 import org.hibernate.Query;
 import org.hibernate.Session;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
-public class BasePersistentService<T> {
+public class BasePersistentService<T> extends BaseService{
 	
 	protected Session session;
-	protected Logger logger = LoggerFactory.getLogger(this.getClass());
 	
 	public BasePersistentService() {
 	}
@@ -32,7 +30,7 @@ public class BasePersistentService<T> {
 		return getAll(Integer.MAX_VALUE);
 	}
 	
-	@SuppressWarnings({ "unchecked" })
+	@SuppressWarnings({ "unchecked", "rawtypes" })
 	public List<T> getAll(Integer maxResult) {
 		Class clazz = (Class) getClass().getGenericSuperclass();
 		String fullname = ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0].toString();
@@ -42,6 +40,7 @@ public class BasePersistentService<T> {
 		return (List<T>) query.list();
 	}
 	
+	@SuppressWarnings("rawtypes")
 	public void deleteAll() {
 		Class clazz = (Class) getClass().getGenericSuperclass();
 		String fullname = ((ParameterizedType) clazz.getGenericSuperclass()).getActualTypeArguments()[0].toString();
@@ -80,7 +79,13 @@ public class BasePersistentService<T> {
 	
 	@SuppressWarnings("unchecked")
 	public List<Object> executeHQLQuery(String query) {
-		return session.createQuery(query).list();
+		Query createQuery = session.createQuery(query);
+		createQuery.setMaxResults(1000);
+		return createQuery.list();
+	}
+	
+	public int executeSQLQuery(String query) {
+		return session.createSQLQuery(query).executeUpdate();
 	}
 	
 	@Override

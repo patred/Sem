@@ -2,21 +2,30 @@
 <!DOCTYPE hibernate-configuration PUBLIC
     "-//Hibernate/Hibernate Configuration DTD//EN"
     "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
-    
+
 <hibernate-configuration>
-    <session-factory>
-    	<property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
-        <property name="connection.url">jdbc:hsqldb:mem:testdb</property>
-        <property name="connection.username">sa</property>
-        <property name="connection.password"></property>
-        <property name="connection.pool_size">2</property>
-        <property name="dialect">org.hibernate.dialect.HSQLDialect</property>
-        <property name="show_sql">true</property>
-        <property name="hbm2ddl.auto">create</property>
-        <property name="hibernate.bytecode.use_reflection_optimizer">false</property>
-        <property name="generate_statistics">true</property>
-        <!-- mapping class="it.site.antonio.persistence.entities.Picture" />
-        <mapping class="it.site.antonio.persistence.entities.Organizer" /-->
-    </session-factory>
+	<session-factory>
+
+		<property name="hibernate.search.default.directory_provider">
+			org.hibernate.search.store.FSDirectoryProvider
+		</property>
+
+		<property name="connection.url">jdbc:hsqldb:mem:sem</property>
+		<property name="connection.username">sa</property>
+		<property name="connection.password"></property>
+		<property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
+		<property name="dialect">org.hibernate.dialect.HSQLDialect</property>
+
+		<property name="archive.autodetection">class, hbm</property>
+		<property name="hbm2ddl.auto">create</property>
+
+		<!-- Non è quello che intuibile la linea sotto... -->
+		<mapping package="it.synclab.patred.persistence.entities" />
+
+		<mapping class="it.synclab.patred.persistence.entities.User" />
+		<mapping class="it.synclab.patred.persistence.entities.Employee" />
+		<mapping class="it.synclab.patred.persistence.entities.Manager" />
+
+	</session-factory>
 </hibernate-configuration>
 

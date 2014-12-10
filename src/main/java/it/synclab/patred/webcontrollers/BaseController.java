@@ -1,4 +1,4 @@
-package it.synclab.patred.controllers;
+package it.synclab.patred.webcontrollers;
 
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;

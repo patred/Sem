@@ -1,4 +1,4 @@
-package it.synclab.patred.controllers;
+package it.synclab.patred.webcontrollers;
 
 import java.util.Hashtable;
 
