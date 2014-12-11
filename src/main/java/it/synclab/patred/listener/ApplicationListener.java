@@ -60,7 +60,7 @@ public class ApplicationListener extends GuiceServletContextListener {
 		
 		changeContextParameter();
 		/**
-		 * TODO deprecated version 4.x of hivernate check alternative
+		 * TODO deprecated version 4.x of hibernate check alternative
 		 * registerHibernateStatistics();
 		 */
 		
@@ -154,17 +154,24 @@ public class ApplicationListener extends GuiceServletContextListener {
 		
 		HibernateSessionService hibernateSessionService = injector.getInstance(HibernateSessionService.class);
 		hibernateSessionService.shutdown();
-		
-		LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
-		lc.stop();
-		
+		try {
+			LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
+			if (lc.isStarted())
+				lc.stop();
+			else
+				lc = null;
+			logger.info("Stopping LoggerContext successfull");
+		} catch (Exception e) {
+			logger.error("Error destroing LoggerContext.", e);
+		}
 		String poolName = semDbPoolDataSourceImpl.getConnectionPoolName();
 		try {
 			
 			UniversalConnectionPoolManagerImpl.getUniversalConnectionPoolManager().destroyConnectionPool(poolName);
+			logger.info("Destroy Universal Connection Pool successfull");
 			
 		} catch (UniversalConnectionPoolException e) {
-			logger.error("Error destroing UniversalConnectionPool " + poolName + ". ", e);
+			logger.error("Error destroing UniversalConnectionPool {}.", poolName, e);
 		}
 		
 		super.contextDestroyed(servletContextEvent);
