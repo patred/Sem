@@ -54,12 +54,14 @@ public class UserController extends BaseBackofficeController {
 		
 		if (sRole.equalsIgnoreCase(Roles.Manager.name()))
 			role = Roles.Manager;
+		
 		if (role == Roles.Empty)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		User allByRoleUser = userservice.getAllByRoleUser(role);
-		if (allByRoleUser != null)
-			return Response.ok(allByRoleUser).build();
+		List<User> allByRoleUsers = userservice.getAllByRoleUser(role);
+		
+		if (allByRoleUsers.size() > 0)
+			return Response.ok(allByRoleUsers).build();
 		return Response.status(Status.NOT_FOUND).build();
 		
 	}

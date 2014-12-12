@@ -3,6 +3,10 @@ package it.synclab.patred.sem;
 import it.synclab.patred.sem.boot.Constants;
 import it.synclab.patred.sem.fake.CalendarServiceMOCK;
 import it.synclab.patred.sem.modules.SemModule;
+import it.synclab.patred.sem.persistence.entities.Employee;
+import it.synclab.patred.sem.persistence.entities.Manager;
+import it.synclab.patred.sem.persistence.entities.Roles;
+import it.synclab.patred.sem.persistence.entities.User;
 import it.synclab.patred.sem.services.persistent.EmployeeOrderService;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
 import it.synclab.patred.sem.services.persistent.ManagerService;
@@ -65,11 +69,6 @@ public class Base {
 			}
 		});
 		
-		checkInitialData();
-	}
-	
-	private static void checkInitialData() {
-		
 	}
 	
 	protected Date todate(String string) {
@@ -85,13 +84,42 @@ public class Base {
 		CalendarServiceMOCK.setFixedCurrentDate(todate);
 	}
 	
+	protected User createUser(String username, String password, Roles role) {
+		
+		User user = userService.getByUsernameUser(username);
+		if (user == null) {
+			user = new User(username, password, role);
+			user.setName("-");
+			user.setSurname("-");
+			
+			switch (role) {
+				case Employee:
+					Employee employee = new Employee("Java Developer Expert");
+					employeeService.save(employee);
+					user.setEmployee(employee);
+					
+					break;
+				case Manager:
+					Manager manager = new Manager("Responsabile di Sistema");
+					managerService.save(manager);
+					user.setManager(manager);
+					break;
+				default:
+					break;
+			}
+			
+			userService.save(user);
+		}
+		return user;
+	}
+	
 	protected void cleanDatabase() {
-		clearOrderService();
-		clearManagerService();
 		clearEmployeeOrderService();
 		clearEmployeeService();
+		clearManagerService();
+		clearOrderService();
 		clearUserService();
-		checkInitialData();
+		
 	}
 	
 	private void clearUserService() {

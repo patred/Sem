@@ -4,6 +4,8 @@ import it.synclab.patred.sem.annotations.Transactional;
 import it.synclab.patred.sem.persistence.entities.Roles;
 import it.synclab.patred.sem.persistence.entities.User;
 
+import java.util.List;
+
 import javax.inject.Singleton;
 
 import org.hibernate.Query;
@@ -29,11 +31,12 @@ public class UserService extends BasePersistentService<User> {
 		return (User) query.uniqueResult();
 	}
 	
-	public User getAllByRoleUser(Roles role) {
+	public List<User> getAllByRoleUser(Roles role) {
 		
 		Query query = session.getNamedQuery("getAllByRoleUser");
 		query.setParameter("role", role);
-		return (User) query.uniqueResult();
+		
+		return (List<User>) query.list();
 	}
 	
 }
