@@ -22,6 +22,7 @@
 	<filter-mapping>
 		<filter-name>GuiceFilter</filter-name>
 		<url-pattern>/services/*</url-pattern>
+		<url-pattern>/backoffice/*</url-pattern>
 		<url-pattern>/application.wadl</url-pattern>
 		<url-pattern>/application.wadl/*</url-pattern>
 	</filter-mapping>

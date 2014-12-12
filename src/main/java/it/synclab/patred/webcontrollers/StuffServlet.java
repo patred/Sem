@@ -13,8 +13,6 @@ import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.core.MediaType;
 
-import org.hibernate.Hibernate;
-
 import com.sun.jersey.spi.resource.PerRequest;
 
 @Transactional
@@ -37,15 +35,10 @@ public class StuffServlet extends BaseController {
 		return getAll();
 	}
 	
+	
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
 	public List<User> getAll() {
-		List<User> all = userservice.getAll();
-		for (User user : all) {
-			Hibernate.initialize(user.getEmployee());
-			Hibernate.initialize(user.getManager());
-
-		}
 		return userservice.getAll();
 	}
 	
@@ -61,11 +54,11 @@ public class StuffServlet extends BaseController {
 	@Path("{id}")
 	@Produces(MediaType.APPLICATION_XML)
 	public User getById(@PathParam("id") String id) {
-		User user = userservice.getUserFromUsername(id);
+		User user = userservice.getByUsernameUser(id);
 		if (user == null)
 			return new User();
-		Hibernate.initialize(user.getEmployee());
-		Hibernate.initialize(user.getManager());
+		//Hibernate.initialize(user.getEmployee());
+		//Hibernate.initialize(user.getManager());
 		return user;
 	}
 	
