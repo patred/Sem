@@ -23,7 +23,7 @@ public class BaseBootstrap {
 	
 	protected User checkAndInsertManager(String username, String password) {
 		
-		User user = userService.getUserFromUsername(username);
+		User user = userService.getByUsernameUser(username);
 		if (user == null) {
 			
 			user = new User(username, password);
@@ -40,7 +40,7 @@ public class BaseBootstrap {
 	
 	protected User checkAndInsertEmployee(String username, String password) {
 		
-		User user = userService.getUserFromUsername(username);
+		User user = userService.getByUsernameUser(username);
 		if (user == null) {
 			
 			user = new User(username, password);

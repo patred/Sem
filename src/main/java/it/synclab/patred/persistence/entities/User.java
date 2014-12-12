@@ -15,7 +15,7 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "Users", uniqueConstraints = @UniqueConstraint(columnNames = "username"))
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "getAllUser", query = "select u from User u"),
+@NamedQueries({ @NamedQuery(name = "getAllUser", query = "select u from User u"), @NamedQuery(name = "getAllByRoleUser", query = "select u from User u where u.role = :role order by u.username desc"),
 		@NamedQuery(name = "getByUsernameUser", query = "select u from User u where u.username = :username"), @NamedQuery(name = "deleteAllUser", query = "delete from User u") })
 public class User implements Serializable {
 	private static final long serialVersionUID = -3341290174467662162L;
