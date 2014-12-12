@@ -83,7 +83,7 @@
 	</logger>
 
 	<logger name="org.hibernate.util.JDBCExceptionReporter" level="ERROR" additivity="false" />
-	<logger name="it.site" level="DEBUG" />
+	<logger name="it.synclab" level="DEBUG" />
 	<root level="INFO">
 		<appender-ref ref="Sem-FILE" />
 	</root>
