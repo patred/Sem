@@ -19,11 +19,11 @@
 		<property name="generate_statistics">true</property>
 		<property name="hbm2ddl.auto">update</property>
 
-		<mapping class="it.synclab.patred.persistence.entities.User" />
-		<mapping class="it.synclab.patred.persistence.entities.Employee" />
-		<mapping class="it.synclab.patred.persistence.entities.Manager" />
-		<mapping class="it.synclab.patred.persistence.entities.Order" />
-		<mapping class="it.synclab.patred.persistence.entities.EmployeeOrder" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.User" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Employee" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Manager" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Order" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.EmployeeOrder" />
 	</session-factory>
 </hibernate-configuration>
 

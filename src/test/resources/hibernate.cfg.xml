@@ -20,11 +20,14 @@
 		<property name="hbm2ddl.auto">create</property>
 
 		<!-- Non è quello che intuibile la linea sotto... -->
-		<mapping package="it.synclab.patred.persistence.entities" />
+		<mapping package="it.synclab.patred.sem.persistence.entities" />
+		
+		<mapping class="it.synclab.patred.sem.persistence.entities.User" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Employee" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Manager" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Order" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.EmployeeOrder" />
 
-		<mapping class="it.synclab.patred.persistence.entities.User" />
-		<mapping class="it.synclab.patred.persistence.entities.Employee" />
-		<mapping class="it.synclab.patred.persistence.entities.Manager" />
 
 	</session-factory>
 </hibernate-configuration>
