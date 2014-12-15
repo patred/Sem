@@ -6,3 +6,6 @@ target/
 .settings
 .project
 .classpath
+/sem.log
+/sem.properties
+/sem.script
