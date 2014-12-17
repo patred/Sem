@@ -1,5 +1,8 @@
 package it.synclab.patred.sem.boot;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 import it.synclab.patred.sem.util.LogUtils;
 
 import org.slf4j.Logger;
@@ -9,7 +12,7 @@ public class BootstrapAdminAndEmployee extends BaseBootstrap {
 	
 	private Logger logger = LoggerFactory.getLogger(LogUtils.formatClassName(this.getClass()));
 	
-	public void run() {
+	public void run() throws NoSuchAlgorithmException, InvalidKeySpecException {
 		
 		String defaultAdmin = "Admin";
 		String defaultEmployee = "Employee";

@@ -13,6 +13,8 @@ import it.synclab.patred.sem.services.persistent.ManagerService;
 import it.synclab.patred.sem.services.persistent.OrderService;
 import it.synclab.patred.sem.services.persistent.UserService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -88,7 +90,13 @@ public class Base {
 		
 		User user = userService.getByUsernameUser(username);
 		if (user == null) {
-			user = new User(username, password, role);
+			try {
+				user = new User(username, password, role);
+			} catch (NoSuchAlgorithmException e) {
+				System.out.println("Password Encryption Failed: " + e);
+			} catch (InvalidKeySpecException e) {
+				System.out.println("Password Encryption Failed: " + e);
+			}
 			user.setName("-");
 			user.setSurname("-");
 			

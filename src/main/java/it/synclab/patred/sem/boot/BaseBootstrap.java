@@ -1,5 +1,8 @@
 package it.synclab.patred.sem.boot;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
+
 import it.synclab.patred.sem.persistence.entities.Employee;
 import it.synclab.patred.sem.persistence.entities.Manager;
 import it.synclab.patred.sem.persistence.entities.Roles;
@@ -21,7 +24,7 @@ public class BaseBootstrap {
 	@Inject
 	protected UserService userService;
 	
-	protected User checkAndInsertManager(String username, String password) {
+	protected User checkAndInsertManager(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		
 		User user = userService.getByUsernameUser(username);
 		if (user == null) {
@@ -38,7 +41,7 @@ public class BaseBootstrap {
 		return user;
 	}
 	
-	protected User checkAndInsertEmployee(String username, String password) {
+	protected User checkAndInsertEmployee(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		
 		User user = userService.getByUsernameUser(username);
 		if (user == null) {

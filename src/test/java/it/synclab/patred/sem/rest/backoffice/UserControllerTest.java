@@ -6,6 +6,8 @@ import it.synclab.patred.sem.persistence.entities.User;
 
 import java.util.List;
 
+import javax.ws.rs.core.GenericEntity;
+import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
 import org.junit.Assert;
@@ -28,10 +30,10 @@ public class UserControllerTest extends Base {
 		createEmployee("employee2");
 		User createManager = createManager("Manager");
 		
-		List<User> managers = (List<User>) controller.getAllByRoleUser("mAnAgEr").getEntity();
-		List<User> employees = (List<User>) controller.getAllByRoleUser("EmPlOyEe").getEntity();
+		List<User> managers = ((GenericEntity<List<User>>) controller.getAllByRoleUser("mAnAgEr").getEntity()).getEntity();
+		List<User> employees = ((GenericEntity<List<User>>) controller.getAllByRoleUser("EmPlOyEe").getEntity()).getEntity();
 		
-		int status = controller.getAllByRoleUser("dehudh").getStatus();
+		int status = ((Response) controller.getAllByRoleUser("dehudh")).getStatus();
 		
 		Assert.assertEquals(1, managers.size());
 		Assert.assertEquals(2, employees.size());
@@ -39,6 +41,7 @@ public class UserControllerTest extends Base {
 		Assert.assertEquals(3, controller.getAll().size());
 		Assert.assertEquals(createManager, managers.get(0));
 		Assert.assertEquals(createEmployee, employees.get(0));
+		
 	}
 	
 	private User createEmployee(String username) {

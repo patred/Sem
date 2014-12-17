@@ -17,6 +17,7 @@ import javax.ws.rs.Path;
 import javax.ws.rs.PathParam;
 import javax.ws.rs.Produces;
 import javax.ws.rs.QueryParam;
+import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
@@ -44,7 +45,7 @@ public class UserController extends BaseBackofficeController {
 	
 	@GET
 	@Path("{role}")
-	@Produces(MediaType.APPLICATION_XML)
+	@Produces(MediaType.TEXT_XML)
 	public Response getAllByRoleUser(@PathParam("role") String sRole) {
 		
 		Roles role = Roles.Empty;
@@ -60,8 +61,20 @@ public class UserController extends BaseBackofficeController {
 		
 		List<User> allByRoleUsers = userservice.getAllByRoleUser(role);
 		
-		if (allByRoleUsers.size() > 0)
-			return Response.ok(allByRoleUsers).build();
+		if (allByRoleUsers.size() > 0) {
+			try {
+				GenericEntity<List<User>> entity = new GenericEntity<List<User>>(allByRoleUsers) {
+				};
+				return Response.ok(entity).build();
+				
+				// return allByRoleUsers;
+				// return Response.ok(allByRoleUsers).build();
+			} catch (Exception e) {
+				logger.error("Grave internal error!", e);
+				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+			}
+		}
+		
 		return Response.status(Status.NOT_FOUND).build();
 		
 	}

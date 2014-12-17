@@ -7,7 +7,7 @@
 	<display-name>Synclab Employees Manager</display-name>
 
 	<listener>
-		<listener-class>it.synclab.patred.listener.ApplicationListener</listener-class>
+		<listener-class>it.synclab.patred.sem.listener.ApplicationListener</listener-class>
 	</listener>
 
 	<session-config>

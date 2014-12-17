@@ -6,6 +6,8 @@ import it.synclab.patred.sem.modules.SemWebModule;
 import it.synclab.patred.sem.services.persistent.HibernateSessionService;
 import it.synclab.patred.sem.util.LogUtils;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 import java.util.Set;
 
@@ -133,7 +135,11 @@ public class ApplicationListener extends GuiceServletContextListener {
 	private void checkAllDefaultDataOnBD() {
 		
 		BootstrapAdminAndEmployee boot = injector.getInstance(BootstrapAdminAndEmployee.class);
-		boot.run();
+		try {
+			boot.run();
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			logger.warn("Password Encryption Failed: {}", e);
+		}
 	}
 	
 	@Override

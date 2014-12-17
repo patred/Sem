@@ -1,6 +1,10 @@
 package it.synclab.patred.sem.persistence.entities;
 
+import it.synclab.patred.sem.util.PasswordEncryption;
+
 import java.io.Serializable;
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;
@@ -22,9 +26,11 @@ public class User implements Serializable {
 	private static final long serialVersionUID = -3341290174467662162L;
 	
 	private String username;
+	private byte[] password;
+	private byte[] salt;
 	private String name;
 	private String surname;
-	private String password;
+	
 	private Roles role;
 	private Employee employee;
 	private Manager manager;
@@ -33,16 +39,20 @@ public class User implements Serializable {
 		this.role = Roles.Empty;
 	}
 	
-	public User(String username, String password) {
+	public User(String username, String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		this.username = username;
-		this.password = password;
+		this.salt = PasswordEncryption.generateSalt();
+		this.password = PasswordEncryption.getEncryptedPassword(password, salt);
 		this.role = Roles.Empty;
+		
 	}
 	
-	public User(String username, String password, Roles role) {
+	public User(String username, String password, Roles role) throws NoSuchAlgorithmException, InvalidKeySpecException {
 		this.username = username;
-		this.password = password;
+		this.salt = PasswordEncryption.generateSalt();
+		this.password = PasswordEncryption.getEncryptedPassword(password, salt);
 		this.role = role;
+		
 	}
 	
 	@Id
@@ -82,6 +92,14 @@ public class User implements Serializable {
 		this.role = role;
 	}
 	
+	public byte[] getSalt() {
+		return salt;
+	}
+	
+	public void setSalt(byte[] salt) {
+		this.salt = salt;
+	}
+	
 	public String getName() {
 		return name;
 	}
@@ -98,11 +116,11 @@ public class User implements Serializable {
 		this.surname = surname;
 	}
 	
-	public String getPassword() {
+	public byte[] getPassword() {
 		return password;
 	}
 	
-	public void setPassword(String password) {
+	public void setPassword(byte[] password) {
 		this.password = password;
 	}
 	
