@@ -6,6 +6,7 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.ManyToOne;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
 import javax.persistence.Table;
@@ -19,6 +20,7 @@ public class Order implements Serializable {
 	private static final long serialVersionUID = 3723514083069329181L;
 	
 	private Long id;
+	private Client client;
 	private String description;
 	
 	public Order() {
@@ -36,6 +38,15 @@ public class Order implements Serializable {
 	
 	public void setId(Long id) {
 		this.id = id;
+	}
+	
+	@ManyToOne
+	public Client getClient() {
+		return client;
+	}
+	
+	public void setClient(Client client) {
+		this.client = client;
 	}
 	
 	public String getDescription() {

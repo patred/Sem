@@ -5,9 +5,9 @@ import java.util.Date;
 
 import javax.xml.bind.annotation.adapters.XmlAdapter;
 
-public class BadDateConverter extends XmlAdapter<String, Date> {
+public class DateConverter extends XmlAdapter<String, Date> {
 	
-	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy HH:mm:ss");
+	private static final SimpleDateFormat sdf = new SimpleDateFormat("dd-MM-yyyy");
 	
 	@Override
 	public String marshal(Date date) throws Exception {

@@ -26,6 +26,8 @@
 		<mapping class="it.synclab.patred.sem.persistence.entities.Manager" />
 		<mapping class="it.synclab.patred.sem.persistence.entities.Order" />
 		<mapping class="it.synclab.patred.sem.persistence.entities.EmployeeOrder" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Client" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.OrderDaily" />
 
 
 	</session-factory>

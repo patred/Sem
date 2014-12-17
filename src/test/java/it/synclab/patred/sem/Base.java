@@ -7,6 +7,7 @@ import it.synclab.patred.sem.persistence.entities.Employee;
 import it.synclab.patred.sem.persistence.entities.Manager;
 import it.synclab.patred.sem.persistence.entities.Roles;
 import it.synclab.patred.sem.persistence.entities.User;
+import it.synclab.patred.sem.services.persistent.ClientService;
 import it.synclab.patred.sem.services.persistent.EmployeeOrderService;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
 import it.synclab.patred.sem.services.persistent.ManagerService;
@@ -41,6 +42,7 @@ public class Base {
 	protected static EmployeeOrderService employeeOrderService;
 	protected static ManagerService managerService;
 	protected static OrderService orderService;
+	protected static ClientService clientService;
 	protected static Constants constants;
 	
 	@BeforeClass
@@ -59,6 +61,7 @@ public class Base {
 		employeeOrderService = injector.getInstance(EmployeeOrderService.class);
 		managerService = injector.getInstance(ManagerService.class);
 		orderService = injector.getInstance(OrderService.class);
+		clientService = injector.getInstance(ClientService.class);
 		
 		constants = injector.getInstance(Constants.class);
 		
@@ -127,6 +130,7 @@ public class Base {
 		clearManagerService();
 		clearOrderService();
 		clearUserService();
+		clearClientService();
 		
 	}
 	
@@ -148,6 +152,10 @@ public class Base {
 	
 	private void clearOrderService() {
 		orderService.deleteAll();
+	}
+	
+	private void clearClientService() {
+		clientService.deleteAll();
 	}
 	
 }
