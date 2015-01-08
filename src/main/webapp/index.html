@@ -1,12 +1,117 @@
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
-<html>
-	<head>
-		<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
-		<title>Synclab Employees Manager</title>
-	</head>
-	
-	<body>
-		<h1>Synclab Employees Manager Test Pages</h1>
-	</body>
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Synclab Employees Manager</title>
+ 
+		<script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
 
+		<link rel="stylesheet" type="text/css" href="css/main.css">
+		
+		<script type="text/javascript" src="js/utility.js"></script>
+		<script type="text/javascript" src="js/ui.js"></script>
+		
+    </head>
+    
+    <body class="yui3-skin-sam">
+    
+	    <div id="menubar" class="yui3-menu yui3-menu-horizontal yui3-menubuttonnav"><!-- Bounding box -->
+	    	<div class="yui3-menu-content"><!-- Content box -->
+	        	<ul class="first-of-type">
+	            <!-- Menu items -->
+	            	<li class="sem_manager" style="display:none;">
+	            		<a class="yui3-menu-label" href="#setup"><em>Configurazione</em></a> 
+	            		<div id="setup" class="yui3-menu">
+	            			<div class="yui3-menu-content">
+	            				<ul class="first-of-type">
+	            					<li> 
+			            				<a class="yui3-menuitem-content" href="#general"><em>Generale...</em></a> 
+			        				</li>
+	            				</ul>
+	            			</div>
+	            		</div>
+	            	</li>
+	            	<li class="sem_manager" style="display:none;">
+	            		<a class="yui3-menu-label" href="#manage"><em>Gestisci</em></a>
+	            		<div id="manage" class="yui3-menu">
+	            			<div class="yui3-menu-content">
+	            				<ul class="first-of-type">
+	            					<li> 
+			            				<a class="yui3-menuitem-content" href="javascript:YContainer.UserDialog.createAndShow();"><em>Utenti</em></a> 
+			        				</li>
+	            				</ul>
+	            			</div>
+	            		</div> 
+	            	</li>
+	            	<li class="sem_employee" style="display:none;">
+	            		<a class="yui3-menu-label" href="#reports"><em>Reports</em></a>
+	            		<div id="reports" class="yui3-menu">
+	            			<div class="yui3-menu-content">
+	            				<ul class="first-of-type">
+	            					<li> 
+			            				<a class="yui3-menuitem-content" href="#test3"><em>test3</em></a> 
+			        				</li>
+	            				</ul>
+	            			</div>
+	            		</div> 
+	            	</li>
+	            	<li class="sem_employee" style="display:none;">
+	            		<a class="yui3-menu-label" href="#utility"><em>Utilità</em></a>
+	            		<div id="utility" class="yui3-menu">
+	            			<div class="yui3-menu-content">
+	            				<ul class="first-of-type">
+	            					<li> 
+			            				<a class="yui3-menuitem-content" href="#test4"><em>test4</em></a> 
+			        				</li>
+	            				</ul>
+	            			</div>
+	            		</div> 
+	            	</li>
+	            	<li> 
+			            <a class="yui3-menuitem-content" href="#logout"><em>Logout</em></a> 
+			        </li>
+	        	</ul>
+	    	</div>
+		</div>
+
+
+
+    	<div id="waitDialog">
+    		<div>Loading, please wait...</div>
+    		<div><img src="images/loading.gif" /></div>
+    	</div>
+    	
+    	<div id="alertDialog"></div>
+ 
+        <div id="errorMessageDialog"></div>
+	    
+    	<div id="loginDialog">
+		    <div id="loginDialogBd">
+		    	<form id="loginForm" action="services/none" method="post" name="login" >
+					<div class="smallTitle" id="loginDialogWelcome">Benvenuto nel Synclab Employees Manager.</div>
+					<br id="loginDialogBr" />
+					<div class="smallText">
+						<table class="table_space" cellpadding="5" cellspacing="5" border="0" width="100%">
+							<tr>
+								<td style="width: 80px"><label for="username" id="loginDialogName">Username:</label></td>
+								<td colspan="2"><input type="text" name="username" id="username" class="textBox" style="width: 97%" /></td>
+							</tr>
+							<tr>
+								<td><label for="password">Password:</label></td>
+								<td colspan="2"><input type="password" name="password" id="password" class="textBox" style="width: 97%" /></td>
+							</tr>
+							<tr id="serverTR">
+								<td><label for="server">Server:</label></td>
+								<td colspan="2"><input type="text" name="server" id="server" class="textBox" style="width: 97%" value="http://localhost:8080/sem/"/></td>
+							</tr>
+						</table>
+					</div>
+				</form>
+		    </div>
+		</div>
+
+
+    </body>
+    
 </html>

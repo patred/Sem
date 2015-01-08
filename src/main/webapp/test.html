@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml">
+    <head>
+        <meta http-equiv="content-type" content="text/html; charset=utf-8">
+        <title>Synclab Employees Manager TEST</title>
+ 
+		<script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
+		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+
+		<link rel="stylesheet" type="text/css" href="css/test.css">
+
+		<script type="text/javascript" src="js/test.js"></script>
+		
+    </head>
+    
+    <body class="yui3-skin-sam">
+    	<div id="loginDialog" style="visibility:hidden">
+		    <div class="hd">Login</div> 
+		    <div class="bd">
+		    	<form id="loginForm" action="services/none" method="post" name="login" onkeypress="if (event.keyCode == 13) (YContainer.loginDialog.handleLoginSubmit())" >
+					<div class="smallTitle" id="loginDialogWelcome">Benvenuto nel Synclab Employees Manager.</div>
+					<br id="loginDialogBr" />
+					<div class="smallText">
+						<table class="table_space" cellpadding="5" cellspacing="5" border="0" width="100%">
+							<tr>
+								<td style="width: 80px"><label for="username" id="loginDialogName">Username:</label></td>
+								<td colspan="2"><input type="text" name="username" id="username" class="textBox" style="width: 97%" /></td>
+							</tr>
+							<tr>
+								<td><label for="password">Password:</label></td>
+								<td colspan="2"><input type="password" name="password" id="password" class="textBox" style="width: 97%" /></td>
+							</tr>
+							<tr id="serverTR">
+								<td><label for="server">Server:</label></td>
+								<td colspan="2"><input type="text" name="server" id="server" class="textBox" style="width: 97%" value="http://localhost:8080/sem/"/></td>
+							</tr>
+						</table>
+					</div>
+				</form>
+		    </div>
+		</div> 
+    	
+    	
+	</body>
+</html>

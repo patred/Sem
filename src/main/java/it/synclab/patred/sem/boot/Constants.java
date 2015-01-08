@@ -17,6 +17,10 @@ import com.google.inject.Singleton;
 public class Constants {
 	
 	private Logger logger = LoggerFactory.getLogger(LogUtils.formatClassName(this.getClass()));
+	/* roles */
+	public static final String ROLE_DEV = "devsem";
+	public static final String ROLE_MANAGER = "semmanager";
+	public static final String ROLE_OPERATOR = "semoperator";
 	
 	/* variables */
 	private Properties props;
