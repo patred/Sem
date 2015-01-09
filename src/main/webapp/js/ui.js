@@ -14,7 +14,7 @@ YContainer.alertDialog = {};
 
 YContainer.UserDialog = {};
 
-YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatable", "datasource-xmlschema", function(Y) {
+YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatable", "datasource-xmlschema","gallery-datatable-selection", function(Y) {
 
 	if (document.URL.indexOf("http://") > -1 || document.URL.indexOf("https://") > -1) {
 		Y.one("#serverTR").setStyle("display", "none");
@@ -206,9 +206,9 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 				visible : true, // make visible explicitly with .show()
 				buttons : {
 					footer : [
-					          { name : 'add', label : 'Aggiungi', action : 'onAdd'},
-					          { name : 'del', label : 'Elimina', action : 'onDel'},
-					          { name : 'ok', label : 'Ok', action : 'onOk'}
+					          { name : 'add', 	label : 'Aggiungi', action : 'onAdd'},
+					          { name : 'del', 	label : 'Elimina', 	action : 'onDel', disabled : true},
+					          { name : 'close', label : 'Close', 	action : 'onClose'}
 					         ]
 				}
 			});
@@ -223,7 +223,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			var myDataSource = new Y.DataSource.IO({
 			    source:"http://localhost:8080/sem/backoffice/user"
 			});
-			alert(server);
+
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
 			    schema: {
 			        resultListLocator: "user",
@@ -238,8 +238,11 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			
 			var myDataTable = new Y.DataTable({
 		        columns	: myColumnDef,
-		        scrollable: "y",
-		        width	: "100%",
+		        highlightMode: 'row',
+		        selectionMode: 'row',
+		        selectionMulti: false,
+		        scrollable: 'y',
+		        width	: '100%',
 		        sortBy	: { username: 'desc' }
 		    });
 			
@@ -251,7 +254,20 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			myDataSource.after("response", function() {
 				myDataTable.render("#usersDataTable")}
 			);
-			    
+			
+			myDataTable.delegate('click', function (e) {
+				if(YContainer.UserDialog.currentRecord != this.getRecord(e.currentTarget)){
+					YContainer.UserDialog.currentRecord = this.getRecord(e.currentTarget);
+					YContainer.UserDialog.dialog.getButton(1).set('disabled', false);
+				}
+
+			}, '.yui3-datatable-data tr', myDataTable);
+			
+			myDataTable.delegate('dblclick', function (e) {
+				Y.log('dblclick');
+				 Y.log(YContainer.UserDialog.currentRecord.toJSON());
+		     }, '.yui3-datatable-data tr', myDataTable);
+			
 			YContainer.UserDialog.datatable = myDataTable;
 			YContainer.UserDialog.datasource = myDataSource;
 		} else {
@@ -259,7 +275,9 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 		};
 		
 		YContainer.UserDialog.refresh = function () {
-			alert("YContainer.UserDialog.refresh");
+			YContainer.UserDialog.currentRecord = null;
+			YContainer.UserDialog.datatable.clearAll()
+			YContainer.UserDialog.dialog.getButton(1).set('disabled', true);
 			YContainer.UserDialog.dialog.show();
 		};
 		
@@ -269,14 +287,12 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 		};
 			
 		YContainer.UserDialog.dialog.onDel = function(e) {
-			e.preventDefault();
-			alert("YContainer.alertDialog.onDel");
+	        Y.log(YContainer.UserDialog.currentRecord.toJSON());
 			this.hide();
 		}
 		
-		YContainer.UserDialog.dialog.onOk = function(e) {
+		YContainer.UserDialog.dialog.onClose = function(e) {
 			e.preventDefault();
-			alert("YContainer.alertDialog.onOk");
 			YContainer.UserDialog.dialog.hide();
 		}
 	};
