@@ -351,7 +351,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			YContainer.UserDialogForm.dialog = new Y.Panel({
 				contentBox 		: "#UserDialogForm",
 				headerContent	: "Utente",
-				width : 350,
+				width : 360,
 				zIndex : 1,
 				centered : true,
 				modal : true, // modal behavior
@@ -414,7 +414,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			YContainer.ClientDialog.dialog = new Y.Panel({
 				contentBox 		: "#clientsDialog",
 				headerContent	: "Gestione Clienti",
-				width : 545,
+				width : 540,
 				zIndex : 1,
 				centered : true,
 				modal : true, // modal behavior
@@ -445,7 +445,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
 			    schema: {
-			        resultListLocator: "user",
+			        resultListLocator: "client",
 			        resultFields: [
 			           {key:"id", locator:"*[local-name() ='id']"},
                        {key:"companyName", locator:"*[local-name() ='companyName']"},
@@ -542,7 +542,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			YContainer.ClientDialogForm.dialog = new Y.Panel({
 				contentBox 		: "#ClientDialogForm",
 				headerContent	: "Cliente",
-				width : 350,
+				width : 360,
 				zIndex : 1,
 				centered : true,
 				modal : true, // modal behavior
@@ -563,12 +563,11 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			YContainer.ClientDialogForm.dialog.onOk = function() {
 				YContainer.waitDialog.show();
 				var client = YContainer.ClientDialogForm.currentRecord;
-			/*	user.setUsername(Y.one('#userDialogForm_Username').get('value'));
-				user.setName(Y.one('#userDialogForm_Name').get('value'));
-				user.setSurname(Y.one('#userDialogForm_Surname').get('value'));
-				user.setRole(Y.one('#userDialogForm_Role').get('value'));
-				user.setRoleDescription(user.getRole(), Y.one('#userDialogForm_Descr').get('value'));
-			*/
+				client.setCompanyName(Y.one('#clientDialogForm_CName').get('value'));
+				client.setRegisteredOffice(Y.one('#clientDialogForm_ROffice').get('value'));
+				client.setAddress(Y.one('#clientDialogForm_Address').get('value'));
+				client.setTelephone(Y.one('#clientDialogForm_Telephone').get('value'));
+				client.setDescription(Y.one('#clientDialogForm_Descr').get('value'));
 				SEM.BussinessMethos.saveBussinesObject(client);
 				YContainer.ClientDialogForm.dialog.hide();
 				YContainer.waitDialog.hide();
@@ -577,18 +576,11 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 		} else {
 			YContainer.ClientDialogForm.dialog.show();
 		};
-		/*
-		Y.one('#userDialogForm_Username').set('value', client.getUsername());
-		Y.one('#userDialogForm_Name').set('value', client.getName());
-		Y.one('#userDialogForm_Surname').set('value', client.getSurname());
-		Y.one('#userDialogForm_Role').set('value', client.getRole());
-		Y.one('#userDialogForm_Descr').set('value', client.getRoleDescription(user.getRole()));
-
-		if(user.isNew())
-			Y.one('#userDialogForm_Username').set('disabled', false);
-		else
-			Y.one('#userDialogForm_Username').set('disabled', true);
-		 */
 		
+		Y.one('#clientDialogForm_CName').set('value', client.getCompanyName());
+		Y.one('#clientDialogForm_ROffice').set('value', client.getRegisteredOffice());
+		Y.one('#clientDialogForm_Address').set('value', client.getAddress());
+		Y.one('#clientDialogForm_Telephone').set('value', client.getTelephone());
+		Y.one('#clientDialogForm_Descr').set('value', client.getDescription());
 	};
 });

@@ -185,7 +185,21 @@ SEM.BussinessObject.User = function (data) {
 	this.getQKey = function() {return "username="+this.getUsername();};
 };
 
-SEM.BussinessObject.User = function (data) {
+/**
+ * Esempio di messaggio:
+ * 	<clients>
+ *		<client>
+ *			<address>indirizzo</address>
+ *			<companyName>nome cliente</companyName>
+ *			<description>DESCRIZIONE</description>
+ *			<id>1</id>
+ *			<registeredOffice>rag. sociale</registeredOffice>
+ *			<telephone>0039654789321</telephone>
+ *		</client>
+ *	</clients>
+ */
+
+SEM.BussinessObject.Client = function (data) {
 	this.base = new SEM.BussinessObject.BaseObject();
 	this.base.servletpath = "backoffice/client";
 	this.base.init(data);
@@ -207,7 +221,7 @@ SEM.BussinessObject.User = function (data) {
 	this.getTelephone = function() 							{	return this.base.get("telephone"); 					};
 	this.setTelephone = function(telephone)					{	this.base.set("telephone", telephone);				};
 	this.getDescription = function() 						{	return this.base.get("description"); 				};
-	this.setDescription = function(des)						{	this.base.set("description", description); 			};
+	this.setDescription = function(description)				{	this.base.set("description", description); 			};
 	
 	this.getKey = function() {return this.getId();};
 	this.getQKey = function() {return "id="+this.getId();};
