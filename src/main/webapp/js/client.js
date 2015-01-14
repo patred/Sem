@@ -177,16 +177,41 @@ SEM.BussinessObject.User = function (data) {
 	this.setRole = function(role)			{	this.base.set("role", role);			};
 	this.getName = function() 				{	return this.base.get("name"); 			};
 	this.setName = function(name)			{	this.base.set("name", name);			};
-	var role = this.getRole().toLowerCase();
-	this.getId = function() 				{ 	return this.base.get(role + "/id");		};
-	this.getRoleDescription = function() 	{	return this.base.get(role + "/role"); 	};
-	this.setRoleDescription = function(des)	{	this.base.set(role + "/role", des); 	};
+	this.getId = function(role) 				{ 	return this.base.get(role.toLowerCase() + "/id");		};
+	this.getRoleDescription = function(role) 	{	return this.base.get(role.toLowerCase() + "/role"); 	};
+	this.setRoleDescription = function(role, des)	{	this.base.set(role.toLowerCase() + "/role", des); 	};
 	
 	this.getKey = function() {return this.getUsername();};
 	this.getQKey = function() {return "username="+this.getUsername();};
 };
 
-/* TODO */
+SEM.BussinessObject.User = function (data) {
+	this.base = new SEM.BussinessObject.BaseObject();
+	this.base.servletpath = "backoffice/client";
+	this.base.init(data);
+	
+	this.setToDelete = this.base.setToDelete;
+	this.isToDelete = this.base.isToDelete;
+	this.isNew = this.base.isNew;
+	this.getData = this.base.getData;
+	this.getParentNode = this.base.getParentNode;
+	
+	this.getId = function() 								{	return this.base.get("id"); 						};
+	this.setId = function(id)								{	this.base.set("id", id);							};
+	this.getCompanyName = function() 						{	return this.base.get("companyName"); 				};
+	this.setCompanyName = function(companyName)				{	this.base.set("companyName", companyName);			};
+	this.getRegisteredOffice = function() 					{	return this.base.get("registeredOffice"); 			};
+	this.setRegisteredOffice = function(registeredOffice)	{	this.base.set("registeredOffice", registeredOffice);};
+	this.getAddress = function() 							{	return this.base.get("address"); 					};
+	this.setAddress = function(address)						{	this.base.set("address", address);					};
+	this.getTelephone = function() 							{	return this.base.get("telephone"); 					};
+	this.setTelephone = function(telephone)					{	this.base.set("telephone", telephone);				};
+	this.getDescription = function() 						{	return this.base.get("description"); 				};
+	this.setDescription = function(des)						{	this.base.set("description", description); 			};
+	
+	this.getKey = function() {return this.getId();};
+	this.getQKey = function() {return "id="+this.getId();};
+};
 
 /**
  * ************************* Funzioni di accesso remoto

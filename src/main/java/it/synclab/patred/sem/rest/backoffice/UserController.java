@@ -1,8 +1,6 @@
 package it.synclab.patred.sem.rest.backoffice;
 
 import it.synclab.patred.sem.annotations.Transactional;
-import it.synclab.patred.sem.persistence.entities.Employee;
-import it.synclab.patred.sem.persistence.entities.Manager;
 import it.synclab.patred.sem.persistence.entities.Roles;
 import it.synclab.patred.sem.persistence.entities.User;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
@@ -58,7 +56,7 @@ public class UserController extends BaseBackofficeController {
 	@GET
 	@Path("new")
 	@Produces(MediaType.APPLICATION_XML)
-	public Object newObject(@QueryParam("appid") String appid) {
+	public Object newObject() {
 		return new User();
 	}
 	
@@ -122,16 +120,16 @@ public class UserController extends BaseBackofficeController {
 	public Response save(User user) {
 		if (user == null)
 			return Response.status(Status.BAD_REQUEST).build();
-		if (Roles.Manager == user.getRole()) {
-			Manager manager = new Manager("Responsabile di Sistema");
-			managerService.save(manager);
-			user.setManager(manager);
-		} else if (Roles.Employee == user.getRole()) {
-			Employee employee = new Employee("Java Developer Expert");
-			employeeService.save(employee);
-			user.setEmployee(employee);
-		} else {
-			return Response.status(Status.BAD_REQUEST).build();
+		
+		switch (user.getRole()) {
+			case Employee:
+				employeeService.save(user.getEmployee());
+				break;
+			case Manager:
+				managerService.save(user.getManager());
+				break;
+			default:
+				break;
 		}
 		
 		try {
@@ -140,8 +138,6 @@ public class UserController extends BaseBackofficeController {
 			logger.warn(e.getMessage());
 			return Response.serverError().build();
 		}
-		logger.info(user.toString());
-		
 		userservice.save(user);
 		return Response.ok().build();
 	}
@@ -149,8 +145,20 @@ public class UserController extends BaseBackofficeController {
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response update(User user) {
-		logger.info(user.toString());
-		// userservice.update(user);
+		if (user == null)
+			return Response.status(Status.BAD_REQUEST).build();
+
+		switch (user.getRole()) {
+			case Employee:
+				employeeService.update(user.getEmployee());
+				break;
+			case Manager:
+				managerService.update(user.getManager());
+				break;
+			default:
+				break;
+		}
+		userservice.update(user);
 		return Response.ok().build();
 	}
 	
@@ -161,6 +169,18 @@ public class UserController extends BaseBackofficeController {
 		
 		if (user == null)
 			return Response.status(Status.NOT_FOUND).build();
+		
+		switch (user.getRole()) {
+			case Employee:
+				employeeService.delete(user.getEmployee());
+				break;
+			case Manager:
+				managerService.delete(user.getManager());
+				break;
+			default:
+				break;
+		}
+		
 		userservice.delete(user);
 		return Response.ok().build();
 	}
