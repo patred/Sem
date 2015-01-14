@@ -5,11 +5,12 @@
         <title>Synclab Employees Manager</title>
  
 		<script src="http://yui.yahooapis.com/3.18.1/build/yui/yui-min.js"></script>
-		<script src="//code.jquery.com/jquery-1.11.0.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.11.0.min.js"></script>
 
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 		
 		<script type="text/javascript" src="js/utility.js"></script>
+		<script type="text/javascript" src="js/client.js"></script>
 		<script type="text/javascript" src="js/ui.js"></script>
 		
     </head>
@@ -78,8 +79,10 @@
 
 
     	<div id="waitDialog">
-    		<div>Loading, please wait...</div>
-    		<div><img src="images/loading.gif" /></div>
+    		<div class="yui3-widget-bd">
+    			<div>Loading, please wait...</div>
+    			<div><img src="images/loading.gif" /></div>
+    		</div>
     	</div>
     	
     	<div id="alertDialog"></div>
@@ -87,7 +90,7 @@
         <div id="errorMessageDialog"></div>
 	    
     	<div id="loginDialog">
-		    <div id="loginDialogBd">
+		    <div class="yui3-widget-bd">
 		    	<form id="loginForm" action="services/none" method="post" name="login" >
 					<div class="smallTitle" id="loginDialogWelcome">Benvenuto nel Synclab Employees Manager.</div>
 					<br id="loginDialogBr" />

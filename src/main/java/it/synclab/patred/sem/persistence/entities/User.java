@@ -96,6 +96,10 @@ public class User implements Serializable {
 		return salt;
 	}
 	
+	public void setSalt() throws NoSuchAlgorithmException {
+		this.salt = PasswordEncryption.generateSalt();
+	}
+	
 	public void setSalt(byte[] salt) {
 		this.salt = salt;
 	}
@@ -112,6 +116,10 @@ public class User implements Serializable {
 		return surname;
 	}
 	
+	public void setPassword(byte[] password) {
+		this.password = password;
+	}
+	
 	public void setSurname(String surname) {
 		this.surname = surname;
 	}
@@ -120,8 +128,9 @@ public class User implements Serializable {
 		return password;
 	}
 	
-	public void setPassword(byte[] password) {
-		this.password = password;
+	public void setPassword(String password) throws NoSuchAlgorithmException, InvalidKeySpecException {
+		this.salt = PasswordEncryption.generateSalt();
+		this.password = PasswordEncryption.getEncryptedPassword(password, salt);
 	}
 	
 	@Override

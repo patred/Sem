@@ -1,4 +1,5 @@
 /* Initialize and render the MenuBar when the page's DOM is ready to be scripted. */
+//var server = window.location.protocol + "//" + window.location.host + window.location.pathname;
 var server = "";
 var username;
 var password;
@@ -13,8 +14,10 @@ YContainer.errorMessageDialog = {};
 YContainer.alertDialog = {};
 
 YContainer.UserDialog = {};
+YContainer.UserDialogForm = {};
 
-YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatable", "datasource-xmlschema","gallery-datatable-selection", function(Y) {
+
+YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-io", "datatable", "datatable-scroll", "datasource-xmlschema","gallery-datatable-selection", "resize-plugin", function(Y) {
 
 	if (document.URL.indexOf("http://") > -1 || document.URL.indexOf("https://") > -1) {
 		Y.one("#serverTR").setStyle("display", "none");
@@ -23,8 +26,9 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 	Y.on("contentready", function() {
 		this.plug(Y.Plugin.NodeMenuNav, {
 			autoSubmenuDisplay : false,
-			mouseOutHideDelay : 0
+			mouseOutHideDelay : 5
 		});
+		YContainer.loginDialog.showPanel();
 	}, "#menubar");
 
 	YContainer.loginDialog = new Y.Panel({
@@ -35,7 +39,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 		centered : true,
 		modal : true, // modal behavior
 		render : true,
-		visible : true, // make visible explicitly with .show()
+		visible : false, // make visible explicitly with .show()
 		buttons : {
 			footer : [ {
 				name : 'proceed',
@@ -44,6 +48,25 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			} ]
 		}
 	});
+	
+	bb = YContainer.loginDialog.get('boundingBox');
+	
+	YContainer.loginDialog.showPanel = function() {
+		YContainer.loginDialog.show();
+        bb.transition({
+            duration: 0.5,
+            top     : '80px'
+        });
+    };
+
+    YContainer.loginDialog.hidePanel = function() {
+        bb.transition({
+            duration: 0.5,
+            top     : '-300px'
+        }, function () {
+        	YContainer.loginDialog.hide();
+        });
+    };
 	
 	YContainer.loginDialog.handleLoginSubmit = function(e) {
 		e.preventDefault();
@@ -64,7 +87,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 				},
 				complete:function(id, response){
 					Y.log('complete');
-					YContainer.loginDialog.hide();
+					YContainer.loginDialog.hidePanel();
 				},
 				success:function(id,response){
 					Y.log('success');
@@ -79,7 +102,8 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 				},
 				failure:function(id, response){
 					Y.log('failure');
-					YContainer.loginDialog.show();
+					YContainer.loginDialog.showPanel();
+					//YContainer.loginDialog.show();
 					onErrorMessage("Username e/o password errate");
 				},
 				end:function(id, response){
@@ -100,7 +124,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 		visible : false
 	// make visible explicitly with .show()
 	});
-
+	
 	/**
 	 * **************************** ALERT
 	 * ********************************************************
@@ -188,6 +212,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 		YContainer.errorMessageDialog.show();
 	};
 	
+	/******* UserDialog ********/
 	YContainer.UserDialog.createAndShow = function() {
 		if (YContainer.UserDialog.dialog == null) {
 			var html = getFile("dialog/users.html");
@@ -213,6 +238,8 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 				}
 			});
 
+			YContainer.UserDialog.dialog.plug(Y.Plugin.Resize);
+			
 			var myColumnDef = [
 			    { key : "username",	label : "Username",	sortable : true,	resizeable:false },
 			    { key : "name",		label : "Nome",		sortable : true, 	resizeable:false},
@@ -221,7 +248,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			   ];
 
 			var myDataSource = new Y.DataSource.IO({
-			    source:"http://localhost:8080/sem/backoffice/user"
+				source: server + 'backoffice/user'
 			});
 
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -243,6 +270,7 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 		        selectionMulti: false,
 		        scrollable: 'y',
 		        width	: '100%',
+		        height	: '200px',
 		        sortBy	: { username: 'desc' }
 		    });
 			
@@ -264,8 +292,9 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			}, '.yui3-datatable-data tr', myDataTable);
 			
 			myDataTable.delegate('dblclick', function (e) {
-				Y.log('dblclick');
-				 Y.log(YContainer.UserDialog.currentRecord.toJSON());
+				var record = YContainer.UserDialog.currentRecord;
+				var user = new SEM.BussinessObject.User(record.get("username"));
+				YContainer.UserDialogForm.createAndShow(user);
 		     }, '.yui3-datatable-data tr', myDataTable);
 			
 			YContainer.UserDialog.datatable = myDataTable;
@@ -278,23 +307,103 @@ YUI().use("node", "node-menunav", "panel", "io-form", "datasource-io", "datatabl
 			YContainer.UserDialog.currentRecord = null;
 			YContainer.UserDialog.datatable.clearAll()
 			YContainer.UserDialog.dialog.getButton(1).set('disabled', true);
+			YContainer.UserDialog.datatable.datasource.load();
 			YContainer.UserDialog.dialog.show();
 		};
 		
 		YContainer.UserDialog.dialog.onAdd = function(e) {
 			e.preventDefault();
-			alert("YContainer.alertDialog.onAdd");
+			var user = new SEM.BussinessObject.User();
+			YContainer.UserDialogForm.createAndShow(user);
 		};
 			
 		YContainer.UserDialog.dialog.onDel = function(e) {
-	        Y.log(YContainer.UserDialog.currentRecord.toJSON());
-			this.hide();
-		}
+			e.preventDefault();
+			var record = YContainer.UserDialog.currentRecord;
+			onAlertMessage("Sicuro di voler eliminare l'utente  <b>" + record.get("username") + "</b>?", { 
+				yes: {
+					  fn: function(o) {
+						  var user = new SEM.BussinessObject.User(record.get("username"));
+						  user.setToDelete(true);
+						  SEM.BussinessMethos.saveBussinesObject(user);
+						  YContainer.UserDialog.refresh;
+						}, 
+					  obj: record
+					}
+			});
+		};
 		
 		YContainer.UserDialog.dialog.onClose = function(e) {
 			e.preventDefault();
 			YContainer.UserDialog.dialog.hide();
-		}
+		};
+		
+		YContainer.UserDialog.dialog.show();
 	};
+	
+	YContainer.UserDialogForm.createAndShow = function(user) {
+		YContainer.UserDialogForm.currentUser = user;
 
+		if(YContainer.UserDialogForm.dialog == null) {
+			var html = getFile("dialog/userForm.html");
+			var elDiv = document.createElement("div");
+			elDiv.innerHTML = html;
+			document.body.appendChild(elDiv);
+			
+			YContainer.UserDialogForm.dialog = new Y.Panel({
+				contentBox 		: "#UserDialogForm",
+				headerContent	: "Utente",
+				width : 350,
+				//height : 350,
+				zIndex : 1,
+				centered : true,
+				modal : true, // modal behavior
+				render : true,
+				visible : true, // make visible explicitly with .show()
+				buttons : {
+					footer : [
+					          { name : 'cancel', 	label : 'Annulla', 	action : 'onCancel'},
+					          { name : 'ok', label : 'Ok', 	action : 'onOk'}
+					         ]
+				}
+			});
+			
+			var combo = Y.one('#userDialogForm_Role');
+			addOption("Empty", combo, true);
+			addOption("Employee", combo, true);
+			addOption("Manager", combo, true);
+			
+		} else {
+			YContainer.UserDialogForm.dialog.show();
+		};
+		
+		Y.one('#userDialogForm_Username').set('value', user.getUsername());
+		Y.one('#userDialogForm_Name').set('value', user.getName());
+		Y.one('#userDialogForm_Surname').set('value', user.getSurname());
+		Y.one('#userDialogForm_Role').set('value', user.getRole());
+
+		if(user.isNew())
+			Y.one('#userDialogForm_Username').set('disabled', false);
+		else
+			Y.one('#userDialogForm_Username').set('disabled', true);
+		
+		YContainer.UserDialogForm.dialog.onCancel = function(e) {
+			e.preventDefault();
+			this.hide();
+		};
+			
+		YContainer.UserDialogForm.dialog.onOk = function(e) {
+			e.preventDefault();
+			YContainer.waitDialog.show();
+			var user = YContainer.UserDialogForm.currentUser;
+			user.setUsername(Y.one('#userDialogForm_Username').get('value'));
+			user.setName(Y.one('#userDialogForm_Name').get('value'));
+			user.setSurname(Y.one('#userDialogForm_Surname').get('value'));
+			user.setRole(Y.one('#userDialogForm_Role').get('value'));
+			SEM.BussinessMethos.saveBussinesObject(user);
+			this.hide();
+			YContainer.waitDialog.hide();
+			YContainer.UserDialog.refresh();
+		};
+	};
 });

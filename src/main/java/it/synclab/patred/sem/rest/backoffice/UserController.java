@@ -1,10 +1,16 @@
 package it.synclab.patred.sem.rest.backoffice;
 
 import it.synclab.patred.sem.annotations.Transactional;
+import it.synclab.patred.sem.persistence.entities.Employee;
+import it.synclab.patred.sem.persistence.entities.Manager;
 import it.synclab.patred.sem.persistence.entities.Roles;
 import it.synclab.patred.sem.persistence.entities.User;
+import it.synclab.patred.sem.services.persistent.EmployeeService;
+import it.synclab.patred.sem.services.persistent.ManagerService;
 import it.synclab.patred.sem.services.persistent.UserService;
 
+import java.security.NoSuchAlgorithmException;
+import java.security.spec.InvalidKeySpecException;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -34,6 +40,12 @@ public class UserController extends BaseBackofficeController {
 	private UserService userservice;
 	
 	@Inject
+	private ManagerService managerService;
+	
+	@Inject
+	private EmployeeService employeeService;
+	
+	@Inject
 	public UserController() {
 	}
 	
@@ -44,9 +56,26 @@ public class UserController extends BaseBackofficeController {
 	}
 	
 	@GET
-	@Path("{role}")
+	@Path("new")
+	@Produces(MediaType.APPLICATION_XML)
+	public Object newObject(@QueryParam("appid") String appid) {
+		return new User();
+	}
+	
+	@GET
+	@Path("{username}")
 	@Produces(MediaType.TEXT_XML)
-	public Response getAllByRoleUser(@PathParam("role") String sRole) {
+	public Object get(@PathParam("username") String username) {
+		
+		User user = userservice.getByUsernameUser(username);
+		if (user != null)
+			return user;
+		return Response.status(Status.NOT_FOUND).build();
+	}
+	
+	@GET
+	@Produces(MediaType.TEXT_XML)
+	public Response getAllByRoleUser(@QueryParam("role") String sRole) {
 		
 		Roles role = Roles.Empty;
 		
@@ -66,9 +95,6 @@ public class UserController extends BaseBackofficeController {
 				GenericEntity<List<User>> entity = new GenericEntity<List<User>>(allByRoleUsers) {
 				};
 				return Response.ok(entity).build();
-				
-				// return allByRoleUsers;
-				// return Response.ok(allByRoleUsers).build();
 			} catch (Exception e) {
 				logger.error("Grave internal error!", e);
 				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
@@ -94,6 +120,28 @@ public class UserController extends BaseBackofficeController {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response save(User user) {
+		if (user == null)
+			return Response.status(Status.BAD_REQUEST).build();
+		if (Roles.Manager == user.getRole()) {
+			Manager manager = new Manager("Responsabile di Sistema");
+			managerService.save(manager);
+			user.setManager(manager);
+		} else if (Roles.Employee == user.getRole()) {
+			Employee employee = new Employee("Java Developer Expert");
+			employeeService.save(employee);
+			user.setEmployee(employee);
+		} else {
+			return Response.status(Status.BAD_REQUEST).build();
+		}
+		
+		try {
+			user.setPassword(user.getUsername());
+		} catch (NoSuchAlgorithmException | InvalidKeySpecException e) {
+			logger.warn(e.getMessage());
+			return Response.serverError().build();
+		}
+		logger.info(user.toString());
+		
 		userservice.save(user);
 		return Response.ok().build();
 	}
@@ -101,8 +149,8 @@ public class UserController extends BaseBackofficeController {
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response update(User user) {
-		
-		userservice.update(user);
+		logger.info(user.toString());
+		// userservice.update(user);
 		return Response.ok().build();
 	}
 	
