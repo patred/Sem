@@ -227,6 +227,41 @@ SEM.BussinessObject.Client = function (data) {
 	this.getQKey = function() {return "id="+this.getId();};
 };
 
+SEM.BussinessObject.Order = function (data) {
+	/**
+	 *	<order>
+	 *		<client>
+	 *			<address>cvevfwe</address>
+	 *			<companyName>fewf</companyName>
+	 *			<description>DESCRIZIONE</description>
+	 *			<id>3</id>
+	 *			<registeredOffice>erfwef</registeredOffice>
+	 *			<telephone>vdvferwfv</telephone>
+	 *		</client>
+	 *		<description>pippo</description>
+	 *		<id>1</id>
+	 *	</order>
+	 */
+	
+	this.base = new SEM.BussinessObject.BaseObject();
+	this.base.servletpath = "backoffice/order";
+	this.base.init(data);
+	
+	this.setToDelete = this.base.setToDelete;
+	this.isToDelete = this.base.isToDelete;
+	this.isNew = this.base.isNew;
+	this.getData = this.base.getData;
+	this.getParentNode = this.base.getParentNode;
+	
+	this.getId = function() 					{	return this.base.get("id"); 				};
+	this.getDescription = function() 			{	return this.base.get("description"); 		};
+	this.setDescription = function(description)	{	this.base.set("description", description);	};
+	this.getClientId = function() 				{	return this.base.get("client/id"); 			};
+	
+	this.getKey = function() {return this.getId();};
+	this.getQKey = function() {return "id="+this.getId();};
+};
+
 /**
  * ************************* Funzioni di accesso remoto
  * **************************************************

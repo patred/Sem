@@ -78,7 +78,8 @@ public class OrderController extends BaseBackofficeController {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response save(Order order) {
-		if(order == null || order.getClient() == null || order.getClient().getCompanyName() == null || "".equals(order.getClient().getCompanyName().trim()))
+		if (order == null)
+		//if(order == null || order.getClient() == null || order.getClient().getId() == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		orderService.save(order);
 		return Response.ok().build();
