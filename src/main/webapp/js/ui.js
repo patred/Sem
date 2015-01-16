@@ -17,6 +17,8 @@ YContainer.UserDialog = {};
 YContainer.UserDialogForm = {};
 YContainer.ClientDialog = {};
 YContainer.ClientDialogForm = {};
+YContainer.OrderDialog = {};
+YContainer.OrderDialogForm = {};
 
 YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-io", "datatable", "datatable-scroll", "datasource-xmlschema","gallery-datatable-selection", "resize-plugin", function(Y) {
 
@@ -256,10 +258,10 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			    schema: {
 			        resultListLocator: "user",
 			        resultFields: [
-                       {key:"username", locator:"*[local-name() ='username']"},
-                       {key:"name", locator:"*[local-name() ='name']"},
-                       {key:"surname", locator:"*[local-name() ='surname']"},
-                       {key:"role", locator:"*[local-name() ='role']"}
+                       {key:"username", locator:"username"},
+                       {key:"name", locator:"name"},
+                       {key:"surname", locator:"surname"},
+                       {key:"role", locator:"role"}
 			        ]
 			    }
 			});
@@ -324,7 +326,6 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			
 			YContainer.UserDialog.datatable = myDataTable;
 			YContainer.UserDialog.datasource = myDataSource;
-			
 			
 		} else {
 			YContainer.UserDialog.refresh();
@@ -447,12 +448,12 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			    schema: {
 			        resultListLocator: "client",
 			        resultFields: [
-			           {key:"id", locator:"*[local-name() ='id']"},
-                       {key:"companyName", locator:"*[local-name() ='companyName']"},
-                       {key:"registeredOffice", locator:"*[local-name() ='registeredOffice']"},
-                       {key:"address", locator:"*[local-name() ='address']"},
+			           {key:"id", locator:"id"},
+                       {key:"companyName", locator:"companyName"},
+                       {key:"registeredOffice", locator:"registeredOffice"},
+                       {key:"address", locator:"address"},
                        {key:"telephone", locator:"telephone"},
-                       {key:"description", locator:"*[local-name() ='description']"}
+                       {key:"description", locator:"description"}
 			        ]
 			    }
 			});
@@ -582,5 +583,132 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 		Y.one('#clientDialogForm_Address').set('value', client.getAddress());
 		Y.one('#clientDialogForm_Telephone').set('value', client.getTelephone());
 		Y.one('#clientDialogForm_Descr').set('value', client.getDescription());
+	};
+	
+	/***************************** OrderDialog *********************/
+	YContainer.OrderDialog.createAndShow = function() {
+		if (YContainer.OrderDialog.dialog == null) {
+			var html = getFile("dialog/orders.html");
+			var elDiv = document.createElement("div");
+			elDiv.innerHTML = html;
+			document.body.appendChild(elDiv);
+			
+			YContainer.OrderDialog.dialog = new Y.Panel({
+				contentBox 		: "#ordersDialog",
+				headerContent	: "Gestione Ordini",
+				width : 450,
+				zIndex : 1,
+				centered : true,
+				modal : true, // modal behavior
+				render : true,
+				visible : true, // make visible explicitly with .show()
+				buttons : {
+					footer : [
+					          { name : 'add', 	label : 'Aggiungi', action : 'onAdd'},
+					          { name : 'del', 	label : 'Elimina', 	action : 'onDel', disabled : true},
+					          { name : 'close', label : 'Close', 	action : 'onClose'}
+					         ]
+				}
+			});
+			
+			YContainer.OrderDialog.dialog.plug(Y.Plugin.Resize);
+
+			var myColumnDef = [
+				   			{ key : "id",			label : "ID",			sortable : true,	resizeable:false },
+			   			    { key : "description",	label : "Descrizione",	sortable : true,	resizeable:false },
+			   			    { key : "client/id",	label : "Id Cliente",	sortable : true, 	resizeable:false}
+			   			   ];
+			var myDataSource = new Y.DataSource.IO({
+				source: server + 'backoffice/order'
+			});
+			
+			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
+			    schema: {
+			        resultListLocator: "order",
+			        resultFields: [
+                       {key:"id", locator:"id"},
+                       {key:"description", locator:"description"},
+                       {key:"client/id", locator:"client/id"}
+			        ]
+			    }
+			});
+			
+			var myDataTable = new Y.DataTable({
+		        columns	: myColumnDef,
+		        highlightMode: 'row',
+		        selectionMode: 'row',
+		        selectionMulti: false,
+		        scrollable: 'y',
+		        width	: '99%',
+		        height	: '200px',
+		        sortBy	: { description: 'desc' }
+		    });
+			
+			myDataTable.plug(Y.Plugin.DataTableDataSource, {
+			    datasource: myDataSource,
+			    initialRequest: ""
+			});
+			
+			myDataSource.after("response", function() {
+				myDataTable.render("#ordersDataTable")}
+			);
+			
+			myDataTable.delegate('click', function (e) {
+				if(YContainer.OrderDialog.currentRecord != this.getRecord(e.currentTarget)){
+					YContainer.OrderDialog.currentRecord = this.getRecord(e.currentTarget);
+					YContainer.OrderDialog.dialog.getButton(1).set('disabled', false);
+				}
+
+			}, '.yui3-datatable-data tr', myDataTable);
+			
+			myDataTable.delegate('dblclick', function (e) {
+				var record = YContainer.OrderDialog.currentRecord;
+				var order = new SEM.BussinessObject.Order(record.get("username"));
+				YContainer.OrderDialogForm.createAndShow(order);
+		     }, '.yui3-datatable-data tr', myDataTable);
+			
+			YContainer.OrderDialog.dialog.onAdd = function() {
+				var order = new SEM.BussinessObject.Order();
+				YContainer.OrderDialogForm.createAndShow(order);
+			};
+			
+			YContainer.OrderDialog.dialog.onDel = function() {
+				var record = YContainer.OrderDialog.currentRecord;
+				onAlertMessage("Sicuro di voler eliminare l'utente  <b>" + record.get("username") + "</b>?", { 
+					yes: {
+						  fn: function(o) {
+							  var order = new SEM.BussinessObject.Order(record.get("username"));
+							  order.setToDelete(true);
+							  SEM.BussinessMethos.saveBussinesObject(order);
+							  YContainer.OrderDialog.refresh();
+							}, 
+						  obj: record
+						}
+				});
+			};
+			
+			YContainer.OrderDialog.dialog.onClose = function() {
+				YContainer.OrderDialog.dialog.hide();
+			};
+			
+			YContainer.OrderDialog.datatable = myDataTable;
+			YContainer.OrderDialog.datasource = myDataSource;
+			
+		} else {
+			YContainer.OrderDialog.refresh();
+		};
+	};
+	
+	YContainer.OrderDialog.refresh = function () {
+		YContainer.OrderDialog.currentRecord = null;
+		YContainer.OrderDialog.datatable.clearAll()
+		YContainer.OrderDialog.dialog.getButton(1).set('disabled', true);
+		YContainer.OrderDialog.datatable.datasource.load();
+		YContainer.OrderDialog.dialog.show();
+	};
+		
+	YContainer.OrderDialogForm.createAndShow = function(order) {
+		YContainer.OrderDialogForm.currentRecord = order;
+		Y.log(OrderDialogForm);
 	};
 });

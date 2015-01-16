@@ -118,7 +118,7 @@ public class UserController extends BaseBackofficeController {
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
 	public Response save(User user) {
-		if (user == null)
+		if (user == null || user.getUsername() == null || "".equals(user.getUsername().trim()))
 			return Response.status(Status.BAD_REQUEST).build();
 		
 		switch (user.getRole()) {
@@ -147,7 +147,7 @@ public class UserController extends BaseBackofficeController {
 	public Response update(User user) {
 		if (user == null)
 			return Response.status(Status.BAD_REQUEST).build();
-
+		
 		switch (user.getRole()) {
 			case Employee:
 				employeeService.update(user.getEmployee());

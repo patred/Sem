@@ -1,8 +1,8 @@
 package it.synclab.patred.sem.rest.backoffice;
 
 import it.synclab.patred.sem.annotations.Transactional;
-import it.synclab.patred.sem.persistence.entities.Client;
-import it.synclab.patred.sem.services.persistent.ClientService;
+import it.synclab.patred.sem.persistence.entities.Order;
+import it.synclab.patred.sem.services.persistent.OrderService;
 
 import java.util.List;
 
@@ -25,27 +25,27 @@ import com.sun.jersey.spi.resource.PerRequest;
 
 @Transactional
 @PerRequest
-@Path("backoffice/client")
-public class ClientController extends BaseBackofficeController {
+@Path("backoffice/order")
+public class OrderController extends BaseBackofficeController {
 	
 	@Inject
-	private ClientService clientService;
+	private OrderService orderService;
 	
 	@Inject
-	public ClientController() {
+	public OrderController() {
 	}
 	
 	@GET
 	@Produces(MediaType.APPLICATION_XML)
-	public List<Client> getAll() {
-		return clientService.getAll();
+	public List<Order> getAll() {
+		return orderService.getAll();
 	}
 	
 	@GET
 	@Path("new")
 	@Produces(MediaType.APPLICATION_XML)
 	public Object newObject() {
-		return new Client();
+		return new Order();
 	}
 	
 	@GET
@@ -53,9 +53,9 @@ public class ClientController extends BaseBackofficeController {
 	@Produces(MediaType.TEXT_XML)
 	public Object get(@PathParam("id") Long id) {
 		
-		Client client = clientService.get(id);
-		if (client != null)
-			return client;
+		Order order = orderService.get(id);
+		if (order != null)
+			return order;
 		return Response.status(Status.NOT_FOUND).build();
 	}
 	
@@ -77,33 +77,32 @@ public class ClientController extends BaseBackofficeController {
 	
 	@POST
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response save(Client client) {
-		if (client == null || client.getCompanyName() == null || "".equals(client.getCompanyName().trim()))
-
+	public Response save(Order order) {
+		if(order == null || order.getClient() == null || order.getClient().getCompanyName() == null || "".equals(order.getClient().getCompanyName().trim()))
 			return Response.status(Status.BAD_REQUEST).build();
-		clientService.save(client);
+		orderService.save(order);
 		return Response.ok().build();
 	}
 	
 	@PUT
 	@Consumes(MediaType.APPLICATION_XML)
-	public Response update(Client client) {
-		if (client == null)
+	public Response update(Order order) {
+		if (order == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		clientService.update(client);
+		orderService.update(order);
 		return Response.ok().build();
 	}
 	
 	@DELETE
 	@Path("{id}")
 	public Object delete(@PathParam("id") Long id) {
-		Client client = clientService.get(id);
+		Order order = orderService.get(id);
 		
-		if (client == null)
+		if (order == null)
 			return Response.status(Status.NOT_FOUND).build();
 		
-		clientService.delete(client);
+		orderService.delete(order);
 		return Response.ok().build();
 	}
 }

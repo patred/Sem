@@ -14,8 +14,11 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "Clients")
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "getAllClient", query = "select c from Client c"), @NamedQuery(name = "getClient", query = "select c from Client c where c.id = :id"),
-		@NamedQuery(name = "deleteAllClient", query = "delete from Client c") })
+@NamedQueries({
+	@NamedQuery(name = "getAllClient", query = "select c from Client c"),
+	@NamedQuery(name = "getClient", query = "select c from Client c where c.id = :id"),
+	@NamedQuery(name = "deleteAllClient", query = "delete from Client c")
+	})
 public class Client implements Serializable {
 	
 	private static final long serialVersionUID = 2939416427160823796L;

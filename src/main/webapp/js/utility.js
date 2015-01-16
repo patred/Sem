@@ -393,49 +393,40 @@ Array.prototype.removeAt = removeAt;
 
 //Create a YUI instance using the io-base module.
 function syncRequest(uri, method, callback, postData) {
-	var args = (callback && callback.argument)?callback.argument:null;
+	var args = (callback && callback.argument) ? callback.argument : null;
 	var response;
-	if(method == null || method == undefined)
+	if (method == null || method == undefined)
 		method = "GET";
-	
-	YUI().use("io-base", function(Y) {
-	    var cfg, request;
-	    // Create a configuration object for the synchronous transaction.
-	    cfg = {
-	    	method: method,
-	        sync: true,
-	        data : postData,
-	        headers: {
-	            'Content-Type': 'application/xml',
-	        },
-	    };
 
-	    /*
-	     * var request will contain the following fields, when the
-	     * transaction is complete:
-	     * - id
-	     * - status
-	     * - statusText
-	     * - getResponseHeader()
-	     * - getAllResponseHeaders()
-	     * - responseText
-	     * - responseXML
-	     * - arguments
-	     */
-	    response = Y.io(uri, cfg);
-	    function complete(id, o, args) {
-	        var id = id; // Transaction ID.
-	        var data = o.responseText; // Response data.
-	        var args = args[1]; // 'ipsum'.
-	      };
-	      
-	    Y.on('io:success', complete, Y);
+	YUI().use("io-base", function(Y) {
+		var cfg;
+		// Create a configuration object for the synchronous transaction.
+		cfg = {
+			method : method,
+			sync : true,
+			data : postData,
+			headers : {
+				'Content-Type' : 'application/xml',
+			},
+		};
+
+		/*
+		 * var response will contain the following fields, when the transaction
+		 * is complete: - id - status - statusText - getResponseHeader() -
+		 * getAllResponseHeaders() - responseText - responseXML - arguments
+		 */
+		response = Y.io(uri, cfg);
+		function complete(id, o, args) {
+			var id = id; // Transaction ID.
+			var data = o.responseText; // Response data.
+			var args = args[1]; // 'ipsum'.
+		};
+
+		Y.on('io:success', complete, Y);
 	});
-	
+
 	return response;
 };
-
-
 
 
 // Path to arrow images
