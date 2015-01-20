@@ -144,17 +144,12 @@ SEM.BussinessObject.BaseObject = function() {
 SEM.BussinessObject.User = function (data) {
 	/**
 	 * Esempio di messaggio:
+	 * 
 	 * 	<user>
-	 * 		<employee>
-	 * 			<id>2</id>
-	 * 			<role>Java Developer Expert</role>
-	 * 		</employee>
-	 * 		<name>-</name>
-	 * 		<password>OVw0md1U3Pmqr89YGjyj5vmj48w=</password>
-	 * 		<role>Employee</role>
-	 * 		<salt>jnyHV5Z4KPA=</salt>
-	 * 		<surname>-</surname>
-	 * 		<username>Employee</username>
+	 * 		<password>RnKAlnECwXSbPx0F7prmhot9T14=</password>
+	 * 		<role>Manager</role>
+	 * 		<salt>0sCvhL189to=</salt>
+	 * 		<username>Admin</username>
 	 * 	</user>
 	 */
 	this.base = new SEM.BussinessObject.BaseObject();
@@ -169,34 +164,98 @@ SEM.BussinessObject.User = function (data) {
 	
 	this.getUsername = function() 			{	return this.base.get("username"); 		};
 	this.setUsername = function(username)	{	this.base.set("username", username);	};
-	this.getSurname = function() 			{	return this.base.get("surname"); 		};
-	this.setSurname = function(surname)		{	this.base.set("surname", surname);		};
-	this.getSalt = function() 				{	return this.base.get("salt"); 			};
-	this.setSalt = function(salt)			{	this.base.set("salt", salt);			};
 	this.getRole = function() 				{	return this.base.get("role"); 			};
 	this.setRole = function(role)			{	this.base.set("role", role);			};
-	this.getName = function() 				{	return this.base.get("name"); 			};
-	this.setName = function(name)			{	this.base.set("name", name);			};
-	this.getId = function(role) 				{ 	return this.base.get(role.toLowerCase() + "/id");		};
-	this.getRoleDescription = function(role) 	{	return this.base.get(role.toLowerCase() + "/role"); 	};
-	this.setRoleDescription = function(role, des)	{	this.base.set(role.toLowerCase() + "/role", des); 	};
 	
 	this.getKey = function() {return this.getUsername();};
 	this.getQKey = function() {return "username="+this.getUsername();};
 };
 
+SEM.BussinessObject.Employee = function (data) {
+	/**
+	 * Esempio di messaggio:
+	 * 	<employee>
+	 * 		<id>1</id>
+	 * 		<name>-</name>
+	 * 		<role>Java Developer Expert</role>
+	 * 		<surname>-</surname>
+	 * 		<user>
+	 * 			<password>C5xOG2ha43MlNWNqPJMYrWGXS7c=</password>
+	 * 			<role>Employee</role>
+	 * 			<salt>odhtR2dG5p4=</salt>
+	 * 			<username>Employee</username>
+	 * 		</user>
+	 * 	</employee>
+	 */
+
+	this.base = new SEM.BussinessObject.BaseObject();
+	this.base.servletpath = "backoffice/employee";
+	this.base.init(data);
+	
+	this.setToDelete = this.base.setToDelete;
+	this.isToDelete = this.base.isToDelete;
+	this.isNew = this.base.isNew;
+	this.getData = this.base.getData;
+	this.getParentNode = this.base.getParentNode;
+	
+	this.getId = function() 			{	return this.base.get("id"); 		};
+	this.getName = function() 			{	return this.base.get("name"); 		};
+	this.setName = function(name)		{	this.base.set("name", name);		};
+	this.getSurname = function() 		{	return this.base.get("surname"); 	};
+	this.setSurname = function(surname)	{	this.base.set("surname", surname);	};
+	this.getRole = function() 			{	return this.base.get("role"); 		};
+	this.setRole = function(role)		{	this.base.set("role", role);		};
+	this.getUsername = function() 		{	return this.base.get("user/username"); };
+	this.setUsername = function(id)		{	this.base.set("user/username", id);	};
+	
+	this.getKey = function() {return this.getId();};
+	this.getQKey = function() {return "id="+this.getId();};
+};
+
+SEM.BussinessObject.Manager = function (data) {
+	/**
+	 * Esempio di messaggio:
+	 * 	<manager>
+	 * 		<id>1</id>
+	 * 		<role>Java Developer Expert</role>
+	 * 		<user>
+	 * 			<password>C5xOG2ha43MlNWNqPJMYrWGXS7c=</password>
+	 * 			<role>Employee</role>
+	 * 			<salt>odhtR2dG5p4=</salt>
+	 * 			<username>Employee</username>
+	 * 		</user>
+	 * 	</manager>
+	 */
+
+	this.base = new SEM.BussinessObject.BaseObject();
+	this.base.servletpath = "backoffice/employee";
+	this.base.init(data);
+	
+	this.setToDelete = this.base.setToDelete;
+	this.isToDelete = this.base.isToDelete;
+	this.isNew = this.base.isNew;
+	this.getData = this.base.getData;
+	this.getParentNode = this.base.getParentNode;
+	
+	this.getId = function() 			{	return this.base.get("id"); 		};
+	this.getRole = function() 			{	return this.base.get("role"); 		};
+	this.setRole = function(role)		{	this.base.set("role", role);		};
+	this.getUsername = function() 		{	return this.base.get("user/username"); 	};
+	this.setUsername = function(id)		{	this.base.set("user/username", id);		};
+	
+	this.getKey = function() {return this.getId();};
+	this.getQKey = function() {return "id="+this.getId();};
+};
 /**
  * Esempio di messaggio:
- * 	<clients>
- *		<client>
- *			<address>indirizzo</address>
- *			<companyName>nome cliente</companyName>
- *			<description>DESCRIZIONE</description>
- *			<id>1</id>
- *			<registeredOffice>rag. sociale</registeredOffice>
- *			<telephone>0039654789321</telephone>
- *		</client>
- *	</clients>
+ *	<client>
+ *		<address>indirizzo</address>
+ *		<companyName>nome cliente</companyName>
+ *		<description>DESCRIZIONE</description>
+ *		<id>1</id>
+ *		<registeredOffice>rag. sociale</registeredOffice>
+ *		<telephone>0039654789321</telephone>
+ *	</client>
  */
 
 SEM.BussinessObject.Client = function (data) {
@@ -239,6 +298,7 @@ SEM.BussinessObject.Order = function (data) {
 	 *			<telephone>vdvferwfv</telephone>
 	 *		</client>
 	 *		<description>pippo</description>
+	 *		<code>RRQ897</code>
 	 *		<id>1</id>
 	 *	</order>
 	 */
@@ -257,6 +317,9 @@ SEM.BussinessObject.Order = function (data) {
 	this.getDescription = function() 			{	return this.base.get("description"); 		};
 	this.setDescription = function(description)	{	this.base.set("description", description);	};
 	this.getClientId = function() 				{	return this.base.get("client/id"); 			};
+	this.setClientId = function(id) 			{	this.base.set("client/id", id); 			};
+	this.getCode = function() 					{	return this.base.get("code"); 				};
+	this.setCode = function(code) 				{	this.base.set("code", code); 				};
 	
 	this.getKey = function() {return this.getId();};
 	this.getQKey = function() {return "id="+this.getId();};

@@ -89,37 +89,40 @@ public class Base {
 		CalendarServiceMOCK.setFixedCurrentDate(todate);
 	}
 	
+	protected Employee createEmployee(User user) {
+		Employee employee = employeeService.getByUser(user);
+		if (employee == null) {
+			employee = new Employee("Java Developer Expert");
+			employee.setName("-");
+			employee.setSurname("-");
+			employee.setUser(user);
+			employeeService.save(employee);
+		}
+		return employee;
+	}
+	
+	protected Manager createManager(User user) {
+		Manager manager = managerService.getByUser(user);
+		if (manager == null) {
+			manager = new Manager("Responsabile di Sistema");
+			manager.setUser(user);
+			managerService.save(manager);
+		}
+		return manager;
+	}
+	
 	protected User createUser(String username, String password, Roles role) {
 		
 		User user = userService.getByUsernameUser(username);
 		if (user == null) {
 			try {
 				user = new User(username, password, role);
+				userService.save(user);
 			} catch (NoSuchAlgorithmException e) {
 				System.out.println("Password Encryption Failed: " + e);
 			} catch (InvalidKeySpecException e) {
 				System.out.println("Password Encryption Failed: " + e);
 			}
-			user.setName("-");
-			user.setSurname("-");
-			
-			switch (role) {
-				case Employee:
-					Employee employee = new Employee("Java Developer Expert");
-					employeeService.save(employee);
-					user.setEmployee(employee);
-					
-					break;
-				case Manager:
-					Manager manager = new Manager("Responsabile di Sistema");
-					managerService.save(manager);
-					user.setManager(manager);
-					break;
-				default:
-					break;
-			}
-			
-			userService.save(user);
 		}
 		return user;
 	}

@@ -6,20 +6,29 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "Managers")
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "getAllManager", query = "select m from Manager m"), @NamedQuery(name = "deleteAllManager", query = "delete from Manager m") })
+@NamedQueries(
+		{	@NamedQuery(name = "getAllManager", query = "select m from Manager m"),
+			@NamedQuery(name = "getManager", query = "select m from Manager m where m.id = :id"),
+			@NamedQuery(name = "getByUserManager", query = "select m from Manager m where m.user = :user"),
+			@NamedQuery(name = "getAllUsernamesManager", query = "select m.user.username from Manager m where m.user.username is not null"),
+			@NamedQuery(name = "deleteAllManager", query = "delete from Manager m")
+		})
 public class Manager implements Serializable {
 	
 	private static final long serialVersionUID = -6981475672787964705L;
 	
 	private Long id;
+	private User user;
 	private String role;
 	
 	public Manager() {
@@ -45,6 +54,16 @@ public class Manager implements Serializable {
 	
 	public void setRole(String role) {
 		this.role = role;
+	}
+	
+	@OneToOne
+	@JoinColumn(unique = true)
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
 	}
 	
 	@Override

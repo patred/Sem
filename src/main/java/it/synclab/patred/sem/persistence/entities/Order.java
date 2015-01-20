@@ -1,5 +1,7 @@
 package it.synclab.patred.sem.persistence.entities;
 
+import it.synclab.patred.sem.util.CodeUtils;
+
 import java.io.Serializable;
 
 import javax.persistence.Entity;
@@ -15,24 +17,29 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "Orders")
 @XmlRootElement
-@NamedQueries({
-	@NamedQuery(name = "getAllOrder", query = "select o from Order o"),
-	@NamedQuery(name = "getOrder", query = "select o from Order o where o.id = :id"),
-	@NamedQuery(name = "deleteAllOrder", query = "delete from Order u")
-	})
-
+@NamedQueries({ @NamedQuery(name = "getAllOrder", query = "select o from Order o"), @NamedQuery(name = "getOrder", query = "select o from Order o where o.id = :id"),
+		@NamedQuery(name = "deleteAllOrder", query = "delete from Order u") })
 public class Order implements Serializable {
 	private static final long serialVersionUID = 3723514083069329181L;
-	
+	private static final String PATTERN = "@@@000";
 	private Long id;
 	private Client client;
 	private String description;
+	private String code;
 	
 	public Order() {
+		this.code = CodeUtils.generaCode(PATTERN);
+		
 	}
 	
 	public Order(String description) {
 		this.description = description;
+		this.code = CodeUtils.generaCode(PATTERN);
+	}
+	
+	public Order(String description, String code) {
+		this.description = description;
+		this.code = code;
 	}
 	
 	@Id
@@ -62,6 +69,16 @@ public class Order implements Serializable {
 		this.description = description;
 	}
 	
+	public String getCode() {
+		if(code == null)
+			this.code = CodeUtils.generaCode(PATTERN);
+		return code;
+	}
+	
+	public void setCode(String code) {
+		this.code = code;
+	}
+	
 	@Override
 	public int hashCode() {
 		final int prime = 31;
@@ -89,7 +106,7 @@ public class Order implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "Order [id=" + id + ", description=" + description + "]";
+		return "Order [id=" + id + ", client=" + client + ", description=" + description + ", code=" + code + "]";
 	}
 	
 }

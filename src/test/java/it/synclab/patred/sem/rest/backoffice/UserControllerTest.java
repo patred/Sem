@@ -1,12 +1,13 @@
 package it.synclab.patred.sem.rest.backoffice;
 
 import it.synclab.patred.sem.Base;
+import it.synclab.patred.sem.persistence.entities.Employee;
+import it.synclab.patred.sem.persistence.entities.Manager;
 import it.synclab.patred.sem.persistence.entities.Roles;
 import it.synclab.patred.sem.persistence.entities.User;
 
 import java.util.List;
 
-import javax.ws.rs.core.GenericEntity;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
@@ -25,33 +26,34 @@ public class UserControllerTest extends Base {
 	@SuppressWarnings("unchecked")
 	@Test
 	public void createUser() {
-		UserController controller = injector.getInstance(UserController.class);
-		User createEmployee = createEmployee("employee");
-		createEmployee("employee2");
-		User createManager = createManager("Manager");
+		EmployeeController eController = injector.getInstance(EmployeeController.class);
+		ManagerController mController = injector.getInstance(ManagerController.class);
+		UserController uController = injector.getInstance(UserController.class);
 		
-		List<User> managers = ((GenericEntity<List<User>>) controller.getAllByRoleUser("mAnAgEr").getEntity()).getEntity();
-		List<User> employees = ((GenericEntity<List<User>>) controller.getAllByRoleUser("EmPlOyEe").getEntity()).getEntity();
+		Employee createEmployee = createEmployee("employee");
+		createEmployee = createEmployee("employee2");
+		Manager createManager = createManager("Manager");
 		
-		int status = ((Response) controller.getAllByRoleUser("dehudh")).getStatus();
+		List<Manager> managers = mController.getAll();
+		List<Employee> employees = eController.getAll();
+		List<User> users = uController.getAll();
 		
 		Assert.assertEquals(1, managers.size());
 		Assert.assertEquals(2, employees.size());
-		Assert.assertEquals(Status.BAD_REQUEST.getStatusCode(), status);
-		Assert.assertEquals(3, controller.getAll().size());
+		Assert.assertEquals(3, users.size());
 		Assert.assertEquals(createManager, managers.get(0));
-		Assert.assertEquals(createEmployee, employees.get(0));
+		Assert.assertEquals(createEmployee, employees.get(1));
 		
 	}
 	
-	private User createEmployee(String username) {
-		
-		return createUser(username, "password", Roles.Employee);
+	private Employee createEmployee(String username) {
+		User user = createUser(username, "password", Roles.Employee);
+		return createEmployee(user);
 	}
 	
-	private User createManager(String username) {
-		return createUser(username, "password", Roles.Manager);
-		
+	private Manager createManager(String username) {
+		User user = createUser(username, "password", Roles.Manager);
+		return createManager(user);
 	}
 	
 }

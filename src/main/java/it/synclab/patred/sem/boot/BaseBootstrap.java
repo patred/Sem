@@ -30,13 +30,12 @@ public class BaseBootstrap {
 		if (user == null) {
 			
 			user = new User(username, password);
-			user.setName("-");
-			user.setSurname("-");
 			user.setRole(Roles.Manager);
-			Manager manager = new Manager("Responsabile di Sistema");
-			managerService.save(manager);
-			user.setManager(manager);
 			userService.save(user);
+			
+			Manager manager = new Manager("Responsabile di Sistema");
+			manager.setUser(user);
+			managerService.save(manager);
 		}
 		return user;
 	}
@@ -47,13 +46,14 @@ public class BaseBootstrap {
 		if (user == null) {
 			
 			user = new User(username, password);
-			user.setName("-");
-			user.setSurname("-");
 			user.setRole(Roles.Employee);
-			Employee employee = new Employee("Java Developer Expert");
-			employeeService.save(employee);
-			user.setEmployee(employee);
 			userService.save(user);
+			
+			Employee employee = new Employee("Java Developer Expert");
+			employee.setName("-");
+			employee.setSurname("-");
+			employee.setUser(user);
+			employeeService.save(employee);
 		}
 		return user;
 	}

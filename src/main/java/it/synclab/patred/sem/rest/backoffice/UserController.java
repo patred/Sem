@@ -26,7 +26,6 @@ import javax.ws.rs.core.MediaType;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.Status;
 
-import com.google.common.base.Strings;
 import com.sun.jersey.spi.resource.PerRequest;
 
 @Transactional
@@ -36,10 +35,8 @@ public class UserController extends BaseBackofficeController {
 	
 	@Inject
 	private UserService userservice;
-	
 	@Inject
 	private ManagerService managerService;
-	
 	@Inject
 	private EmployeeService employeeService;
 	
@@ -61,19 +58,9 @@ public class UserController extends BaseBackofficeController {
 	}
 	
 	@GET
-	@Path("{username}")
+	@Path("available")
 	@Produces(MediaType.TEXT_XML)
-	public Object get(@PathParam("username") String username) {
-		
-		User user = userservice.getByUsernameUser(username);
-		if (user != null)
-			return user;
-		return Response.status(Status.NOT_FOUND).build();
-	}
-	
-	@GET
-	@Produces(MediaType.TEXT_XML)
-	public Response getAllByRoleUser(@QueryParam("role") String sRole) {
+	public Response getAllByRoleUser(@QueryParam("role") String sRole, @QueryParam("available") boolean available) {
 		
 		Roles role = Roles.Empty;
 		
@@ -86,32 +73,30 @@ public class UserController extends BaseBackofficeController {
 		if (role == Roles.Empty)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		List<User> allByRoleUsers = userservice.getAllByRoleUser(role);
+		List<User> users = available ? getAvailableByRoleUser(role) : userservice.getAllByRoleUser(role);
 		
-		if (allByRoleUsers.size() > 0) {
+		//if (users.size() > 0) {
 			try {
-				GenericEntity<List<User>> entity = new GenericEntity<List<User>>(allByRoleUsers) {
+				GenericEntity<List<User>> entity = new GenericEntity<List<User>>(users) {
 				};
 				return Response.ok(entity).build();
 			} catch (Exception e) {
 				logger.error("Grave internal error!", e);
 				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
 			}
-		}
+		//}
 		
-		return Response.status(Status.NOT_FOUND).build();
-		
+		//return Response.status(Status.NOT_FOUND).build();
 	}
 	
 	@GET
-	@Path("search")
-	@Produces(MediaType.APPLICATION_XML)
-	public Response search(@QueryParam("userid") String userid) {
-		if (Strings.isNullOrEmpty(userid))
-			return Response.status(Status.BAD_REQUEST).build();
-		User user = userservice.getByUsernameUser(userid);
+	@Path("{username}")
+	@Produces(MediaType.TEXT_XML)
+	public Object get(@PathParam("username") String username) {
+		
+		User user = userservice.getByUsernameUser(username);
 		if (user != null)
-			return Response.ok(user).build();
+			return user;
 		return Response.status(Status.NOT_FOUND).build();
 	}
 	
@@ -120,17 +105,6 @@ public class UserController extends BaseBackofficeController {
 	public Response save(User user) {
 		if (user == null || user.getUsername() == null || "".equals(user.getUsername().trim()))
 			return Response.status(Status.BAD_REQUEST).build();
-		
-		switch (user.getRole()) {
-			case Employee:
-				employeeService.save(user.getEmployee());
-				break;
-			case Manager:
-				managerService.save(user.getManager());
-				break;
-			default:
-				break;
-		}
 		
 		try {
 			user.setPassword(user.getUsername());
@@ -148,16 +122,6 @@ public class UserController extends BaseBackofficeController {
 		if (user == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
-		switch (user.getRole()) {
-			case Employee:
-				employeeService.update(user.getEmployee());
-				break;
-			case Manager:
-				managerService.update(user.getManager());
-				break;
-			default:
-				break;
-		}
 		userservice.update(user);
 		return Response.ok().build();
 	}
@@ -170,18 +134,15 @@ public class UserController extends BaseBackofficeController {
 		if (user == null)
 			return Response.status(Status.NOT_FOUND).build();
 		
-		switch (user.getRole()) {
-			case Employee:
-				employeeService.delete(user.getEmployee());
-				break;
-			case Manager:
-				managerService.delete(user.getManager());
-				break;
-			default:
-				break;
-		}
-		
 		userservice.delete(user);
 		return Response.ok().build();
+	}
+	
+	private List<User> getAvailableByRoleUser(Roles role) {
+		List<String> usernames = employeeService.getAllUsernames();
+		usernames.addAll(managerService.getAllUsernames());
+		
+		List<User> allByRoleUser = userservice.getAvailableByRoleUser(role, usernames);
+		return allByRoleUser;
 	}
 }

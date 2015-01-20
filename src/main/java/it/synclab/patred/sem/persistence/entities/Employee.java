@@ -6,21 +6,32 @@ import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
+import javax.persistence.JoinColumn;
 import javax.persistence.NamedQueries;
 import javax.persistence.NamedQuery;
+import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import javax.xml.bind.annotation.XmlRootElement;
 
 @Entity
 @Table(name = "Employees")
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "getAllEmployee", query = "select u from Employee u"), @NamedQuery(name = "deleteAllEmployee", query = "delete from Employee u") })
+@NamedQueries(
+		{ 	@NamedQuery(name = "getAllEmployee", query = "select e from Employee e"),
+			@NamedQuery(name = "getEmployee", query = "select e from Employee e where e.id = :id"),
+			@NamedQuery(name = "getByUserEmployee", query = "select e from Employee e where e.user = :user"),
+			@NamedQuery(name = "getAllUsernamesEmployee", query = "select e.user.username from Employee e where e.user.username is not null"),
+			@NamedQuery(name = "deleteAllEmployee", query = "delete from Employee e") 
+		})
 public class Employee implements Serializable {
 	
 	private static final long serialVersionUID = -1378102048195683176L;
 	
 	private Long id;
+	private String name;
+	private String surname;
 	private String role;
+	private User user;
 	private Long calendarId;
 	
 	public Employee() {
@@ -48,6 +59,16 @@ public class Employee implements Serializable {
 		this.role = role;
 	}
 	
+	@OneToOne
+	@JoinColumn(unique = true)
+	public User getUser() {
+		return user;
+	}
+
+	public void setUser(User user) {
+		this.user = user;
+	}
+
 	public Long getCalendarId() {
 		return calendarId;
 	}
@@ -56,6 +77,22 @@ public class Employee implements Serializable {
 		this.calendarId = calendarId;
 	}
 	
+	public String getName() {
+		return name;
+	}
+
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getSurname() {
+		return surname;
+	}
+
+	public void setSurname(String surname) {
+		this.surname = surname;
+	}
+
 	@Override
 	public int hashCode() {
 		final int prime = 31;

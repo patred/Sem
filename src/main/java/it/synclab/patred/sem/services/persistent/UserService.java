@@ -51,4 +51,12 @@ public class UserService extends BasePersistentService<User> {
 		return (List<User>) query.list();
 	}
 	
+	@SuppressWarnings("unchecked")
+	public List<User> getAvailableByRoleUser(Roles role, List<String> usernames) {
+		
+		Query query = session.getNamedQuery("getAvailableByRoleUser");
+		query.setParameter("role", role);
+		query.setParameterList("usernames", usernames);
+		return (List<User>) query.list();
+	}
 }

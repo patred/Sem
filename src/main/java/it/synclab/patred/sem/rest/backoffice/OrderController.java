@@ -91,6 +91,9 @@ public class OrderController extends BaseBackofficeController {
 		if (order == null)
 			return Response.status(Status.BAD_REQUEST).build();
 		
+		if(order.getClient() != null)
+			logger.info(order.toString());
+		
 		orderService.update(order);
 		return Response.ok().build();
 	}
