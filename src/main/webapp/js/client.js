@@ -228,7 +228,7 @@ SEM.BussinessObject.Manager = function (data) {
 	 */
 
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/employee";
+	this.base.servletpath = "backoffice/manager";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;

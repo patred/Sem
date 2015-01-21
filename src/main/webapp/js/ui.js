@@ -19,6 +19,8 @@ YContainer.SelectUserDialog = {};
 
 YContainer.EmployeeDialog = {};
 YContainer.EmployeeDialogForm = {};
+YContainer.ManagerDialog = {};
+YContainer.ManagerDialogForm = {};
 YContainer.ClientDialog = {};
 YContainer.ClientDialogForm = {};
 YContainer.SelectClientDialog = {};
@@ -498,7 +500,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			
 			YContainer.EmployeeDialog.dialog.onJoinUser = function() {
 				var record = YContainer.EmployeeDialog.currentRecord;
-				YContainer.SelectUserDialog.createAndShow(record);
+				YContainer.SelectUserDialog.createAndShow(record, 'employee');
 			};
 			
 			YContainer.EmployeeDialog.dialog.onAdd = function() {
@@ -592,8 +594,192 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 
 	};
 	
-	YContainer.SelectUserDialog.createAndShow = function(employee) {
-		YContainer.SelectUserDialog.employee = employee;
+/******* ManagerDialog ********/
+	
+	YContainer.ManagerDialog.createAndShow = function() {
+		if (YContainer.ManagerDialog.dialog == null) {
+			var html = getFile("dialog/managers.html");
+			var elDiv = document.createElement("div");
+			elDiv.innerHTML = html;
+			document.body.appendChild(elDiv);
+			
+			YContainer.ManagerDialog.dialog = new Y.Panel({
+				contentBox 		: "#managersDialog",
+				headerContent	: "Gestione Responsabili",
+				width : 600,
+				zIndex : 1,
+				centered : true,
+				modal : true, // modal behavior
+				render : true,
+				visible : true, // make visible explicitly with .show()
+				buttons : {
+					footer : [
+					          { name : 'joinUser',	label : 'Associa Utenza',	action : 'onJoinUser',	disabled : true},
+					          { name : 'add', 		label : 'Aggiungi', 		action : 'onAdd'},
+					          { name : 'del', 		label : 'Elimina', 			action : 'onDel', disabled : true},
+					          { name : 'cancel', 	label : 'Annulla', 			action : 'onCancel'}
+					         ]
+				}
+			});
+			
+			YContainer.ManagerDialog.dialog.plug(Y.Plugin.Resize);
+			
+			YContainer.ManagerDialog.getUser = function(o) {
+				return o.value == null ? "N.A." : o.value;
+			};
+			
+			var myColumnDef = [
+			                { key : "id",		label : "ID",		sortable : true, 	resizeable:false, width: 50},
+			   			    { key : "role",		label : "Ruolo",	sortable : false,	resizeable:false },
+			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable:true, width: 50, formatter: YContainer.ManagerDialog.getUser, allowHTML: true}
+			   			   ];
+			var myDataSource = new Y.DataSource.IO({
+				source: server + 'backoffice/manager'
+			});
+			
+			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
+			    schema: {
+			        resultListLocator: "manager",
+			        resultFields: [
+			           {key:"id", locator:"id"},
+                       {key:"role", locator:"role"},
+                       {key:"username", locator:"user/username"}
+			        ]
+			    }
+			});
+			
+			var myDataTable = new Y.DataTable({
+		        columns	: myColumnDef,
+		        highlightMode: 'row',
+		        selectionMode: 'row',
+		        selectionMulti: false,
+		        scrollable: 'y',
+		        width	: '100%',
+		        height	: '200px',
+		        sortBy	: { surname: 'desc' }
+		    });
+			
+			myDataTable.plug(Y.Plugin.DataTableDataSource, {
+			    datasource: myDataSource,
+			    initialRequest: ""
+			});
+			
+			myDataSource.after("response", function() {
+				myDataTable.render("#managersDataTable");
+				});
+			
+			myDataTable.delegate('click', function (e) {
+				if(YContainer.ManagerDialog.currentRecord != this.getRecord(e.currentTarget)){
+					YContainer.ManagerDialog.currentRecord = this.getRecord(e.currentTarget);
+				}
+				
+				YContainer.ManagerDialog.dialog.getButton(0).set('disabled', false);
+				YContainer.ManagerDialog.dialog.getButton(2).set('disabled', false);
+
+
+			}, '.yui3-datatable-data tr', myDataTable);
+			
+			myDataTable.delegate('dblclick', function (e) {
+				var record = YContainer.ManagerDialog.currentRecord;
+				var manager = new SEM.BussinessObject.Manager(record.get("id"));
+				YContainer.ManagerDialogForm.createAndShow(manager);
+		     }, '.yui3-datatable-data tr', myDataTable);
+			
+			YContainer.ManagerDialog.dialog.onJoinUser = function() {
+				var record = YContainer.ManagerDialog.currentRecord;
+				YContainer.SelectUserDialog.createAndShow(record, 'manager');
+			};
+			
+			YContainer.ManagerDialog.dialog.onAdd = function() {
+				var manager = new SEM.BussinessObject.Manager();
+				YContainer.ManagerDialogForm.createAndShow(manager);
+			};
+			
+			YContainer.ManagerDialog.dialog.onDel = function() {
+				var record = YContainer.ManagerDialog.currentRecord;
+				onAlertMessage("Sicuro di voler eliminare il responsabile  <b>" + record.get("id") + "</b>?", { 
+					yes: {
+						  fn: function(o) {
+							  var manager = new SEM.BussinessObject.Manager(record.get("id"));
+							  manager.setToDelete(true);
+							  SEM.BussinessMethos.saveBussinesObject(manager);
+							  YContainer.ManagerDialog.refresh();
+							}, 
+						  obj: record
+						}
+				});
+			};
+			
+			YContainer.ManagerDialog.dialog.onCancel = function() {
+				YContainer.ManagerDialog.dialog.hide();
+			};
+			
+			YContainer.ManagerDialog.datatable = myDataTable;
+			YContainer.ManagerDialog.datasource = myDataSource;
+		} else {
+			YContainer.ManagerDialog.refresh();
+		};
+	};
+	
+	YContainer.ManagerDialog.refresh = function () {
+		YContainer.ManagerDialog.currentRecord = null;
+		YContainer.ManagerDialog.datatable.clearAll();
+		YContainer.ManagerDialog.dialog.getButton(0).set('disabled', true);
+		YContainer.ManagerDialog.dialog.getButton(2).set('disabled', true);
+		YContainer.ManagerDialog.datatable.datasource.load();
+		YContainer.ManagerDialog.dialog.show();
+	};
+	
+	YContainer.ManagerDialogForm.createAndShow = function(manager) {
+		YContainer.ManagerDialogForm.currentRecord = manager;
+		
+		if(YContainer.ManagerDialogForm.dialog == null) {
+			var html = getFile("dialog/managerForm.html");
+			var elDiv = document.createElement("div");
+			elDiv.innerHTML = html;
+			document.body.appendChild(elDiv);
+			
+			YContainer.ManagerDialogForm.dialog = new Y.Panel({
+				contentBox 		: "#ManagerDialogForm",
+				headerContent	: "Responsabile",
+				width : 360,
+				zIndex : 1,
+				centered : true,
+				modal : true, // modal behavior
+				render : true,
+				visible : true, // make visible explicitly with .show()
+				buttons : {
+					footer : [
+					          { name : 'cancel',label : 'Annulla', 	action : 'onCancel'},
+					          { name : 'ok', 	label : 'Ok', 		action : 'onOk'}
+					         ]
+				}
+			});
+			
+			YContainer.ManagerDialogForm.dialog.onCancel = function() {
+				YContainer.ManagerDialogForm.dialog.hide();
+			};
+			
+			YContainer.ManagerDialogForm.dialog.onOk = function() {
+				YContainer.waitDialog.show();
+				var manager = YContainer.ManagerDialogForm.currentRecord;
+				manager.setRole(Y.one('#managerDialogForm_Role').get('value'));
+				SEM.BussinessMethos.saveBussinesObject(manager);
+				YContainer.ManagerDialogForm.dialog.hide();
+				YContainer.waitDialog.hide();
+				YContainer.ManagerDialog.refresh();
+			};
+		} else {
+			YContainer.ManagerDialogForm.dialog.show();
+		};
+		
+		Y.one('#managerDialogForm_Role').set('value', manager.getRole());
+
+	};
+	
+	/**** SelectUserDialog *****/
+	YContainer.SelectUserDialog.createAndShow = function(record, path) {
+		YContainer.SelectUserDialog.record = record;
 		
 		if(YContainer.SelectUserDialog.dialog == null) {
 			var html = getFile("dialog/selectUsers.html");
@@ -605,7 +791,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				contentBox 		: "#selectUsersDialog",
 				headerContent	: "Utenze Disponibili",
 				width : 300,
-				zIndex : 1,
+				zIndex : 10,
 				centered : true,
 				modal : true, // modal behavior
 				render : true,
@@ -625,7 +811,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			                   ];
 			
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/user/available?role=employee&available=true'
+				source: server + 'backoffice/user/available?role=' + path + '&available=true'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -664,17 +850,24 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			}, '.yui3-datatable-data tr', myDataTable);
 			
 			myDataTable.delegate('dblclick', function (e) {
-				var record = YContainer.SelectUserDialog.currentRecord;
-				var employee = YContainer.SelectUserDialog.employee;
-				YContainer.SelectUserDialog.join(employee.get('id'), record.get('username'));
+				var user = YContainer.SelectUserDialog.currentRecord;
+				var record = YContainer.SelectUserDialog.record;
+				if(path == 'manager')
+					YContainer.SelectUserDialog.joinManager(record.get('id'), user.get('username'));
+				else
+					YContainer.SelectUserDialog.joinEmployee(record.get('id'), user.get('username'));
+				
 				YContainer.SelectUserDialog.dialog.hide();
 		     }, '.yui3-datatable-data tr', myDataTable);
 			
 			YContainer.SelectUserDialog.dialog.onSelect = function() {
-				var record = YContainer.SelectUserDialog.currentRecord;
-				var employee = YContainer.SelectUserDialog.employee;
-				YContainer.SelectUserDialog.join(employee.get('id'), record.get('username'));
-				YContainer.SelectUserDialog.dialog.hide();
+				var user = YContainer.SelectUserDialog.currentRecord;
+				var record = YContainer.SelectUserDialog.record;
+				
+				if(path == 'manager')
+					YContainer.SelectUserDialog.joinManager(record.get('id'), user.get('username'));
+				else
+					YContainer.SelectUserDialog.joinEmployee(record.get('id'), user.get('username'));				YContainer.SelectUserDialog.dialog.hide();
 			};
 			
 			YContainer.SelectUserDialog.dialog.onCancel = function() {
@@ -697,7 +890,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 		YContainer.SelectUserDialog.dialog.show();
 	};
 	
-	YContainer.SelectUserDialog.join = function (employeeId, username) {
+	YContainer.SelectUserDialog.joinEmployee = function (employeeId, username) {
 		Y.log("Associazione dipendente " + employeeId + " con l'utenza " + username);
 		onAlertMessage("Sicuro di voler associare il dipendente  <b>" + employeeId + "</b> con l'utenza <b>" + username + "</b>?", { 
 			yes: {
@@ -707,6 +900,21 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 					  SEM.BussinessMethos.saveBussinesObject(employee);
 					  YContainer.SelectUserDialog.dialog.hide();
 					  YContainer.EmployeeDialog.refresh();
+					}
+				}
+		});
+	};
+	
+	YContainer.SelectUserDialog.joinManager = function (managerId, username) {
+		Y.log("Associazione responsabile " + managerId + " con l'utenza " + username);
+		onAlertMessage("Sicuro di voler associare il responsabile  <b>" + managerId + "</b> con l'utenza <b>" + username + "</b>?", { 
+			yes: {
+				  fn: function(o) {
+					  var manager = new SEM.BussinessObject.Manager(managerId);
+					  manager.setUsername(username);
+					  SEM.BussinessMethos.saveBussinesObject(manager);
+					  YContainer.SelectUserDialog.dialog.hide();
+					  YContainer.ManagerDialog.refresh();
 					}
 				}
 		});
