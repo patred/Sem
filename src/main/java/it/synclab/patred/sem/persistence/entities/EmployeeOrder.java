@@ -12,8 +12,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @Entity
 @Table(name = "EmployeeOrders")
 @XmlRootElement
-@NamedQueries({ @NamedQuery(name = "getAllEmployeeOrder", query = "select e from EmployeeOrder e"),
-		@NamedQuery(name = "deleteAllEmployeeOrder", query = "delete from EmployeeOrder e") })
+@NamedQueries({
+	@NamedQuery(name = "getAllEmployeeOrder", query = "select e from EmployeeOrder e"),
+	@NamedQuery(name = "getByEmployeeClient", query = "select e from EmployeeOrder e where e.pk.employee = :employee"),
+	@NamedQuery(name = "getByOrderClient", query = "select e from EmployeeOrder e where e.pk.order = :order"),
+	@NamedQuery(name = "deleteAllEmployeeOrder", query = "delete from EmployeeOrder e")
+	})
 public class EmployeeOrder implements Serializable {
 	
 	private static final long serialVersionUID = -3142644870040445153L;

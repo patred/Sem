@@ -13,11 +13,11 @@ if (typeof SEM.BussinessMethos == "undefined" || !SEM.BussinessMethos) {
 SEM.BussinessMethos.genericCallback = {
 	success : function(mess) {
 		// Do nothing
-		console.log("success")
+		console.log("success");
 		YContainer.waitDialog.dialog.hide();
 	},
 	failure : function(mess) {
-		console.log("failure dannaz!")
+		console.log("failure dannaz!");
 		var el = evalutateXPath(mess.responseXML, "desc");
 		if (el.length > 0)
 			onErrorMessage(getContentInElement(el.pop()));
@@ -33,7 +33,6 @@ SEM.BussinessObject.BaseObject = function() {
 	this.isnew = false;
 
 	this.init = function(data) {
-		//var xhr = YAHOO.util.Connect.createXhrObject();
 		var response;
 		var url = server + this.servletpath;
 		if (data == null) {
@@ -325,6 +324,58 @@ SEM.BussinessObject.Order = function (data) {
 	this.getQKey = function() {return "id="+this.getId();};
 };
 
+SEM.BussinessObject.EmployeeOrder = function (data) {
+	/**
+	 * <employeeOrder>
+	 * 		<pk>
+	 * 			<employee>
+	 * 				<id>1</id>
+	 * 				<name>-</name>
+	 * 				<role>Java Developer Expert</role>
+	 * 				<surname>-</surname>
+	 * 				<user>
+	 * 					<password>7yu+8mdMi6pUFdJCw248kfCncrY=</password>
+	 * 					<role>Employee</role>
+	 * 					<salt>q0asvUwqNjE=</salt>
+	 * 					<username>paperino</username>
+	 * 				</user>
+	 * 			</employee>
+	 * 			<order>
+	 * 				<client>
+	 * 					<address>Firenze</address>
+	 * 					<companyName>Quid</companyName>
+	 * 					<description>UBIS</description>
+	 * 					<id>1</id>
+	 * 					<registeredOffice>Quid s.r.l.</registeredOffice>
+	 * 					<telephone>987456321</telephone>
+	 * 				</client>
+	 * 				<code>GKW855</code>
+	 * 				<description>Team Leader QUID</description>
+	 * 				<id>1</id>
+	 * 			</order>
+	 * 		</pk>
+	 * 	</employeeOrder>
+	 */
+	
+	this.base = new SEM.BussinessObject.BaseObject();
+	this.base.servletpath = "backoffice/employeeorder";
+	this.base.init(data);
+	
+	this.setToDelete = this.base.setToDelete;
+	this.isToDelete = this.base.isToDelete;
+	this.isNew = this.base.isNew;
+	this.getData = this.base.getData;
+	this.getParentNode = this.base.getParentNode;
+	
+	this.getEmployeeId = function() 	{	return this.base.get("pk/employee/id");	};
+	this.setEmployeeId = function(id)	{	this.base.set("pk/employee/id", id);	};
+	this.getOrderId = function() 		{	return this.base.get("pk/order/id"); 	};
+	this.setOrderId = function(id) 		{	this.base.set("pk/order/id", id); 		};
+	
+	this.getKey = function() {return this.getEmployeeId() + '_' + this.getOrderId;};
+	this.getQKey = function() {return "id="+this.getKey();};
+};
+
 /**
  * ************************* Funzioni di accesso remoto
  * **************************************************
@@ -359,4 +410,9 @@ SEM.BussinessMethos.saveBussinesObject = function(object) {
 	}
 
 	return syncRequest(server + servletpath, method, SEM.BussinessMethos.genericCallback, data);
+};
+
+
+SEM.BussinessMethos.getNOrder = function(employeeId){
+	return syncRequest(server + "backoffice/employeeorder/employee/" + employeeId, "GET", SEM.BussinessMethos.genericCallback);
 };

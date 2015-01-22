@@ -75,18 +75,14 @@ public class UserController extends BaseBackofficeController {
 		
 		List<User> users = available ? getAvailableByRoleUser(role) : userservice.getAllByRoleUser(role);
 		
-		//if (users.size() > 0) {
-			try {
-				GenericEntity<List<User>> entity = new GenericEntity<List<User>>(users) {
-				};
-				return Response.ok(entity).build();
-			} catch (Exception e) {
-				logger.error("Grave internal error!", e);
-				return Response.status(Status.INTERNAL_SERVER_ERROR).build();
-			}
-		//}
-		
-		//return Response.status(Status.NOT_FOUND).build();
+		try {
+			GenericEntity<List<User>> entity = new GenericEntity<List<User>>(users) {
+			};
+			return Response.ok(entity).build();
+		} catch (Exception e) {
+			logger.error("Grave internal error!", e);
+			return Response.status(Status.INTERNAL_SERVER_ERROR).build();
+		}
 	}
 	
 	@GET

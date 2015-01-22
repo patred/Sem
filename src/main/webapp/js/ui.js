@@ -19,18 +19,21 @@ YContainer.SelectUserDialog = {};
 
 YContainer.EmployeeDialog = {};
 YContainer.EmployeeDialogForm = {};
+YContainer.SelectOrderDialog = {};
+
 YContainer.ManagerDialog = {};
 YContainer.ManagerDialogForm = {};
+
 YContainer.ClientDialog = {};
 YContainer.ClientDialogForm = {};
 YContainer.SelectClientDialog = {};
 YContainer.SimpleClientDialogForm = {};
+
 YContainer.OrderDialog = {};
 YContainer.OrderDialogForm = {};
 
 
-YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-io", "datatable", "datatable-scroll", "datasource-xmlschema","gallery-datatable-selection", "resize-plugin", function(Y) {
-
+YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form", "datasource-io", "datatable", "datatable-scroll", "datasource-xmlschema","gallery-datatable-selection", "resize-plugin", function(Y) {
 	if (document.URL.indexOf("http://") > -1 || document.URL.indexOf("https://") > -1) {
 		Y.one("#serverTR").setStyle("display", "none");
 	};
@@ -245,12 +248,18 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 					footer : [
 					          { name : 'add', 	label : 'Aggiungi', action : 'onAdd'},
 					          { name : 'del', 	label : 'Elimina', 	action : 'onDel', disabled : true},
-					          { name : 'cancel', label : 'Annulla', 	action : 'onCancel'}
+					          { name : 'close', label : 'Chiudi', 	action : 'onClose'}
 					         ]
 				}
 			});
 
 			YContainer.UserDialog.dialog.plug(Y.Plugin.Resize);
+			
+			YContainer.UserDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
 			
 			var myColumnDef = [
 			    { key : "username",	label : "Username",	sortable : true,	resizeable:false },
@@ -325,7 +334,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				});
 			};
 			
-			YContainer.UserDialog.dialog.onCancel = function() {
+			YContainer.UserDialog.dialog.onClose = function() {
 				YContainer.UserDialog.dialog.hide();
 			};
 			
@@ -423,26 +432,40 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				visible : true, // make visible explicitly with .show()
 				buttons : {
 					footer : [
+					          { name : 'joinOrder',	label : 'Associa Ordini',	action : 'onJoinOrder',	disabled : true},
 					          { name : 'joinUser',	label : 'Associa Utenza',	action : 'onJoinUser',	disabled : true},
 					          { name : 'add', 		label : 'Aggiungi', 		action : 'onAdd'},
 					          { name : 'del', 		label : 'Elimina', 			action : 'onDel', disabled : true},
-					          { name : 'cancel', 	label : 'Annulla', 			action : 'onCancel'}
+					          { name : 'close', 	label : 'Chiudi', 			action : 'onClose'}
 					         ]
 				}
 			});
 			
 			YContainer.EmployeeDialog.dialog.plug(Y.Plugin.Resize);
 			
-			YContainer.EmployeeDialog.getUser = function(o) {
-				return o.value == null ? "N.A." : o.value;
-			};
+			YContainer.EmployeeDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
 			
 			var myColumnDef = [
 			                { key : "id",		label : "ID",		sortable : true, 	resizeable:false, width: 50},
 			                { key : "surname",	label : "Cognome",	sortable : true, 	resizeable:false, width: 200},
 			   			    { key : "name",		label : "Nome",		sortable : true, 	resizeable:false, width: 200},
 			   			    { key : "role",		label : "Ruolo",	sortable : false,	resizeable:false },
-			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable:true, width: 50, formatter: YContainer.EmployeeDialog.getUser, allowHTML: true}
+			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable:true, width: 50, allowHTML: true,
+			   			    	formatter: function(o) {
+			   			    		return o.value == null ? "N.A." : o.value;
+			   			    	}
+			   			    },
+			   			    { key : "nOrders",  label : "N. Ordini",sortable : true,	resizeable:false, width: 50,
+			   			    	formatter: function(o){
+			   			    		var orders = SEM.BussinessMethos.getNOrder(o.data.id);
+			   			    		var count = orders.responseXML.childNodes[0].childElementCount;
+			   			    		return orders.responseXML.childNodes[0].childElementCount;
+			   		             }
+			   		        }
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
 				source: server + 'backoffice/employee'
@@ -487,7 +510,8 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				}
 				
 				YContainer.EmployeeDialog.dialog.getButton(0).set('disabled', false);
-				YContainer.EmployeeDialog.dialog.getButton(2).set('disabled', false);
+				YContainer.EmployeeDialog.dialog.getButton(1).set('disabled', false);
+				YContainer.EmployeeDialog.dialog.getButton(3).set('disabled', false);
 
 
 			}, '.yui3-datatable-data tr', myDataTable);
@@ -501,6 +525,12 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			YContainer.EmployeeDialog.dialog.onJoinUser = function() {
 				var record = YContainer.EmployeeDialog.currentRecord;
 				YContainer.SelectUserDialog.createAndShow(record, 'employee');
+			};
+			
+			YContainer.EmployeeDialog.dialog.onJoinOrder = function() {
+				var record = YContainer.EmployeeDialog.currentRecord;
+				Y.log("onJoinOrder:" + record.get('id'));
+				YContainer.SelectOrderDialog.createAndShow(record);
 			};
 			
 			YContainer.EmployeeDialog.dialog.onAdd = function() {
@@ -523,7 +553,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				});
 			};
 			
-			YContainer.EmployeeDialog.dialog.onCancel = function() {
+			YContainer.EmployeeDialog.dialog.onClose = function() {
 				YContainer.EmployeeDialog.dialog.hide();
 			};
 			
@@ -538,7 +568,8 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 		YContainer.EmployeeDialog.currentRecord = null;
 		YContainer.EmployeeDialog.datatable.clearAll();
 		YContainer.EmployeeDialog.dialog.getButton(0).set('disabled', true);
-		YContainer.EmployeeDialog.dialog.getButton(2).set('disabled', true);
+		YContainer.EmployeeDialog.dialog.getButton(1).set('disabled', true);
+		YContainer.EmployeeDialog.dialog.getButton(3).set('disabled', true);
 		YContainer.EmployeeDialog.datatable.datasource.load();
 		YContainer.EmployeeDialog.dialog.show();
 	};
@@ -591,8 +622,142 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 		Y.one('#employeeDialogForm_Name').set('value', employee.getName());
 		Y.one('#employeeDialogForm_Surname').set('value', employee.getSurname());
 		Y.one('#employeeDialogForm_Role').set('value', employee.getRole());
-
 	};
+	
+	YContainer.SelectOrderDialog.createAndShow = function(employee) {
+		YContainer.SelectOrderDialog.employee = employee;
+		if(YContainer.SelectOrderDialog.dialog == null) {
+			var html = getFile("dialog/selectOrders.html");
+			var elDiv = document.createElement("div");
+			elDiv.innerHTML = html;
+			document.body.appendChild(elDiv);
+			
+			YContainer.SelectOrderDialog.dialog = new Y.Panel({
+				contentBox 		: "#selectOrdersDialog",
+				headerContent	: "Ordini",
+				width : 600,
+				zIndex : 1,
+				centered : true,
+				modal : true, // modal behavior
+				render : true,
+				visible : true, // make visible explicitly with .show()
+				buttons : {
+					footer : [
+					          { name : 'select', 	label : 'Seleziona', 	action : 'onSelect', disabled : true },
+					          { name : 'cancel', 	label : 'Annulla', 		action : 'onCancel'}
+					         ]
+				}
+			});
+			
+			YContainer.SelectOrderDialog.dialog.plug(Y.Plugin.Resize);
+
+			YContainer.SelectOrderDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
+			
+			var myColumnDef = [
+					   		{ key : "id",			label : "ID",			sortable : true,	resizeable:true, width: 50 },
+			   			    { key : "code",			label : "Cod. commessa",sortable : false,	resizeable:true, width: 100},
+			   			    { key : "description",	label : "Descrizione",	sortable : true,	resizeable:true},
+			   			    { key : "client",		label : "Cliente",		sortable : true, 	resizeable:true, width: 100}
+				   			   ];
+			var myDataSource = new Y.DataSource.IO({
+				source: server + 'backoffice/order'
+			});
+			
+			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
+			    schema: {
+			        resultListLocator: "order",
+			        resultFields: [
+			           {key:"id", locator:"id"},
+                       {key:"code", locator:"code"},
+                       {key:"description", locator:"description"},
+                       {key:"client", locator:"client/companyName"}
+			        ]
+			    }
+			});
+			
+			var myDataTable = new Y.DataTable({
+		        columns	: myColumnDef,
+		        highlightMode: 'row',
+		        selectionMode: 'row',
+		        selectionMulti: false,
+		        scrollable: 'y',
+		        width	: '100%',
+		        height	: '200px',
+		        sortBy	: { id: 'desc' }
+		    });
+			
+			myDataTable.plug(Y.Plugin.DataTableDataSource, {
+			    datasource: myDataSource,
+			    initialRequest: ""
+			});
+			
+			myDataSource.after("response", function() {
+				myDataTable.render("#selectOrdersDataTable");
+			});
+			
+			myDataTable.delegate('click', function (e) {
+				if(YContainer.SelectOrderDialog.currentRecord != this.getRecord(e.currentTarget)){
+					YContainer.SelectOrderDialog.currentRecord = this.getRecord(e.currentTarget);
+				}
+				YContainer.SelectOrderDialog.dialog.getButton(0).set('disabled', false);
+
+			}, '.yui3-datatable-data tr', myDataTable);
+			
+			myDataTable.delegate('dblclick', function (e) {
+				var record = YContainer.SelectOrderDialog.currentRecord;
+				var employee = YContainer.SelectOrderDialog.employee;
+				YContainer.SelectOrderDialog.join(employee.get('id'), record.get('id'));
+				YContainer.SelectOrderDialog.dialog.hide();
+		     }, '.yui3-datatable-data tr', myDataTable);
+			
+			YContainer.SelectOrderDialog.dialog.onSelect = function() {
+				var record = YContainer.SelectOrderDialog.currentRecord;
+				var employee = YContainer.SelectOrderDialog.employee;
+				YContainer.SelectOrderDialog.join(employee.get('id'), record.get('id'));
+				YContainer.SelectOrderDialog.dialog.hide();
+			};
+			
+			YContainer.SelectOrderDialog.dialog.onCancel = function() {
+				YContainer.SelectOrderDialog.dialog.hide();
+				YContainer.SelectOrderDialog.currentRecord = null;
+			};
+			
+			YContainer.SelectOrderDialog.datatable = myDataTable;
+			YContainer.SelectOrderDialog.datasource = myDataSource;
+			
+		} else {
+			YContainer.SelectOrderDialog.refresh();
+		};
+	};
+	
+	YContainer.SelectOrderDialog.refresh = function () {
+		YContainer.SelectOrderDialog.currentRecord = null;
+		YContainer.SelectOrderDialog.datatable.clearAll();
+		YContainer.SelectOrderDialog.dialog.getButton(0).set('disabled', true);
+		YContainer.SelectOrderDialog.datatable.datasource.load();
+		YContainer.SelectOrderDialog.dialog.show();
+	};
+	
+	YContainer.SelectOrderDialog.join = function (employeeId, orderId) {
+		Y.log("Associazione ordine " + orderId + " con il dipendente " + employeeId);
+		onAlertMessage("Sicuro di voler associare l'ordine  <b>" + orderId + "</b> con il dipendente <b>" + employeeId + "</b>?", { 
+			yes: {
+				  fn: function(o) {
+					  var employeeOrder = new SEM.BussinessObject.EmployeeOrder();
+					  employeeOrder.setEmployeeId(employeeId);
+					  employeeOrder.setOrderId(orderId);
+					  SEM.BussinessMethos.saveBussinesObject(employeeOrder);
+					  YContainer.SelectOrderDialog.dialog.hide();
+					  YContainer.EmployeeDialog.refresh();
+					}
+				}
+		});
+	};
+	
 	
 /******* ManagerDialog ********/
 	
@@ -617,21 +782,27 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 					          { name : 'joinUser',	label : 'Associa Utenza',	action : 'onJoinUser',	disabled : true},
 					          { name : 'add', 		label : 'Aggiungi', 		action : 'onAdd'},
 					          { name : 'del', 		label : 'Elimina', 			action : 'onDel', disabled : true},
-					          { name : 'cancel', 	label : 'Annulla', 			action : 'onCancel'}
+					          { name : 'close', 	label : 'Chiudi', 			action : 'onClose'}
 					         ]
 				}
 			});
 			
 			YContainer.ManagerDialog.dialog.plug(Y.Plugin.Resize);
 			
-			YContainer.ManagerDialog.getUser = function(o) {
-				return o.value == null ? "N.A." : o.value;
-			};
+			YContainer.ManagerDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
 			
 			var myColumnDef = [
 			                { key : "id",		label : "ID",		sortable : true, 	resizeable:false, width: 50},
 			   			    { key : "role",		label : "Ruolo",	sortable : false,	resizeable:false },
-			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable:true, width: 50, formatter: YContainer.ManagerDialog.getUser, allowHTML: true}
+			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable:true, width: 50, allowHTML: true,
+			   			    	formatter: function(o) {
+			   			    		return o.value == null ? "N.A." : o.value;
+			   			    	}
+			   			    }
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
 				source: server + 'backoffice/manager'
@@ -710,7 +881,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				});
 			};
 			
-			YContainer.ManagerDialog.dialog.onCancel = function() {
+			YContainer.ManagerDialog.dialog.onClose = function() {
 				YContainer.ManagerDialog.dialog.hide();
 			};
 			
@@ -805,6 +976,12 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			});
 			
 			YContainer.SelectUserDialog.dialog.plug(Y.Plugin.Resize);
+			
+			YContainer.SelectUserDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
 			
 			var myColumnDef = [
 			                   {key : "username", label : "Username", sortable : true, resizeable:true}
@@ -942,13 +1119,19 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 					footer : [
 					          { name : 'add', 	label : 'Aggiungi', action : 'onAdd'},
 					          { name : 'del', 	label : 'Elimina', 	action : 'onDel', disabled : true},
-					          { name : 'cancel', label : 'Annulla', 	action : 'onCancel'}
+					          { name : 'close', label : 'Chiudi', 	action : 'onClose'}
 					         ]
 				}
 			});
 			
 			YContainer.ClientDialog.dialog.plug(Y.Plugin.Resize);
 
+			YContainer.ClientDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
+			
 			var myColumnDef = [
 				   			{ key : "id",				label : "ID",			sortable : true,	resizeable:true, width: 50 },
 			   			    { key : "companyName",		label : "Nome",			sortable : true,	resizeable:true },
@@ -1029,7 +1212,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				});
 			};
 			
-			YContainer.ClientDialog.dialog.onCancel = function() {
+			YContainer.ClientDialog.dialog.onClose = function() {
 				YContainer.ClientDialog.dialog.hide();
 			};
 			
@@ -1163,12 +1346,18 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 					          { name : 'editOrder', label : 'Modifica Ordine', 	action : 'onEditOrder',	disabled : true},
 					          { name : 'add', 		label : 'Aggiungi', 		action : 'onAdd'},
 					          { name : 'del', 		label : 'Elimina', 			action : 'onDel', 		disabled : true},
-					          { name : 'cancel', 	label : 'Annulla', 			action : 'onCancel'}
+					          { name : 'close', 	label : 'Chiudi', 			action : 'onClose'}
 					         ]
 				}
 			});
 			
 			YContainer.OrderDialog.dialog.plug(Y.Plugin.Resize);
+			
+			YContainer.OrderDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
 			
 			YContainer.OrderDialog.getClient = function(o) {
 				if(o.value == null)
@@ -1259,7 +1448,7 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 				});
 			};
 			
-			YContainer.OrderDialog.dialog.onCancel = function() {
+			YContainer.OrderDialog.dialog.onClose = function() {
 				YContainer.OrderDialog.dialog.hide();
 			};
 			
@@ -1355,6 +1544,12 @@ YUI().use("node", "node-menunav", "panel", "transition", "io-form", "datasource-
 			
 			YContainer.SelectClientDialog.dialog.plug(Y.Plugin.Resize);
 
+			YContainer.SelectClientDialog.dialog.plug(Y.Plugin.Drag, {
+			    handles: [
+			        '.yui3-widget-hd'
+			    ]
+			});
+			
 			var myColumnDef = [
 					   			{ key : "id",				label : "ID",			sortable : true,	resizeable:true, width: 50 },
 				   			    { key : "companyName",		label : "Nome",			sortable : true,	resizeable:true },

@@ -12,14 +12,14 @@ public class LogInterceptor implements MethodInterceptor {
 	@Override
 	public Object invoke(MethodInvocation invocation) throws Throwable {
 		
-		Logger logger = LoggerFactory.getLogger(this.getClass());
+		Class<?> declaringClass = invocation.getMethod().getDeclaringClass();
+		Logger logger = LoggerFactory.getLogger(declaringClass);
 		
-		String classname = invocation.getMethod().getDeclaringClass().getSimpleName();
 		String methodName = invocation.getMethod().getName();
 		
 		String args = Joiner.on(", ").useForNull("null").join(invocation.getArguments());
 		
-		logger.info("{}.{}({})", new Object[] { classname, methodName, args });
+		logger.info("{}({})", new Object[] { methodName, args });
 		
 		Object output = invocation.proceed();
 		

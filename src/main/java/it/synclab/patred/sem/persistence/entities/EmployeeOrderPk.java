@@ -10,7 +10,7 @@ public class EmployeeOrderPk implements Serializable {
 	
 	private static final long serialVersionUID = 5167402927121497125L;
 	
-	private Employee Employee;
+	private Employee employee;
 	private Order order;
 	
 	public EmployeeOrderPk() {
@@ -18,11 +18,11 @@ public class EmployeeOrderPk implements Serializable {
 	
 	@ManyToOne
 	public Employee getEmployee() {
-		return Employee;
+		return employee;
 	}
 	
 	public void setEmployee(Employee employee) {
-		Employee = employee;
+		this.employee = employee;
 	}
 	
 	@ManyToOne
@@ -38,7 +38,7 @@ public class EmployeeOrderPk implements Serializable {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + ((Employee == null) ? 0 : Employee.hashCode());
+		result = prime * result + ((employee == null) ? 0 : employee.hashCode());
 		result = prime * result + ((order == null) ? 0 : order.hashCode());
 		return result;
 	}
@@ -52,10 +52,10 @@ public class EmployeeOrderPk implements Serializable {
 		if (getClass() != obj.getClass())
 			return false;
 		EmployeeOrderPk other = (EmployeeOrderPk) obj;
-		if (Employee == null) {
-			if (other.Employee != null)
+		if (employee == null) {
+			if (other.employee != null)
 				return false;
-		} else if (!Employee.equals(other.Employee))
+		} else if (!employee.equals(other.employee))
 			return false;
 		if (order == null) {
 			if (other.order != null)
@@ -67,7 +67,7 @@ public class EmployeeOrderPk implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "EmployeeOrderPk [Employee=" + Employee + ", order=" + order + "]";
+		return "EmployeeOrderPk [Employee=" + employee + ", order=" + order + "]";
 	}
 	
 }

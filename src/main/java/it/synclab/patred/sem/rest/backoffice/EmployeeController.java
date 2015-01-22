@@ -2,6 +2,8 @@ package it.synclab.patred.sem.rest.backoffice;
 
 import it.synclab.patred.sem.annotations.Transactional;
 import it.synclab.patred.sem.persistence.entities.Employee;
+import it.synclab.patred.sem.persistence.entities.EmployeeOrder;
+import it.synclab.patred.sem.services.persistent.EmployeeOrderService;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
 
 import java.util.List;
@@ -28,6 +30,9 @@ public class EmployeeController extends BaseBackofficeController {
 	
 	@Inject
 	private EmployeeService employeeService;
+	
+	@Inject
+	private EmployeeOrderService employeeOrderService;
 	
 	@Inject
 	public EmployeeController() {
@@ -84,6 +89,11 @@ public class EmployeeController extends BaseBackofficeController {
 		
 		if (employee == null)
 			return Response.status(Status.NOT_FOUND).build();
+		
+		
+		for (EmployeeOrder employeeOrder : employeeOrderService.getByEmployee(employee)) {
+			employeeOrderService.delete(employeeOrder);
+		}
 		
 		employeeService.delete(employee);
 		return Response.ok().build();
