@@ -88,7 +88,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		Y.log("handleLoginSubmit");
 		username = Y.one('#username').get('value');
 		password = Y.one('#password').get('value');
-		Y.io(server + 'backoffice/userroles', {
+		Y.io(server + 'userroles', {
 			method : 'POST',
 			data :  { 'username':username, 'password':password },
 			form : {
@@ -230,7 +230,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	/******* UserDialog ********/
 	YContainer.UserDialog.createAndShow = function() {
 		if (YContainer.UserDialog.dialog == null) {
-			var html = getFile("dialog/users.html");
+			var html = getFile("../dialog/users.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -267,7 +267,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   ];
 
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/user'
+				source: server + 'user'
 			});
 
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -358,7 +358,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		YContainer.UserDialogForm.currentRecord = user;
 
 		if(YContainer.UserDialogForm.dialog == null) {
-			var html = getFile("dialog/userForm.html");
+			var html = getFile("../dialog/userForm.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -416,7 +416,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	
 	YContainer.EmployeeDialog.createAndShow = function() {
 		if (YContainer.EmployeeDialog.dialog == null) {
-			var html = getFile("dialog/employees.html");
+			var html = getFile("../dialog/employees.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -468,7 +468,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   		        }
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/employee'
+				source: server + 'employee'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -578,7 +578,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		YContainer.EmployeeDialogForm.currentRecord = employee;
 		
 		if(YContainer.EmployeeDialogForm.dialog == null) {
-			var html = getFile("dialog/employeeForm.html");
+			var html = getFile("../dialog/employeeForm.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -627,7 +627,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	YContainer.SelectOrderDialog.createAndShow = function(employee) {
 		YContainer.SelectOrderDialog.employee = employee;
 		if(YContainer.SelectOrderDialog.dialog == null) {
-			var html = getFile("dialog/selectOrders.html");
+			var html = getFile("../dialog/selectOrders.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -664,7 +664,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   			    { key : "client",		label : "Cliente",		sortable : true, 	resizeable:true, width: 100}
 				   			   ];
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/order'
+				source: server + 'order'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -763,7 +763,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	
 	YContainer.ManagerDialog.createAndShow = function() {
 		if (YContainer.ManagerDialog.dialog == null) {
-			var html = getFile("dialog/managers.html");
+			var html = getFile("../dialog/managers.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -805,7 +805,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   			    }
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/manager'
+				source: server + 'manager'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -905,7 +905,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		YContainer.ManagerDialogForm.currentRecord = manager;
 		
 		if(YContainer.ManagerDialogForm.dialog == null) {
-			var html = getFile("dialog/managerForm.html");
+			var html = getFile("../dialog/managerForm.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -953,7 +953,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		YContainer.SelectUserDialog.record = record;
 		
 		if(YContainer.SelectUserDialog.dialog == null) {
-			var html = getFile("dialog/selectUsers.html");
+			var html = getFile("../dialog/selectUsers.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -988,7 +988,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			                   ];
 			
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/user/available?role=' + path + '&available=true'
+				source: server + 'user/available?role=' + path + '&available=true'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -1101,7 +1101,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	/******* ClientDialog ********/
 	YContainer.ClientDialog.createAndShow = function() {
 		if (YContainer.ClientDialog.dialog == null) {
-			var html = getFile("dialog/clients.html");
+			var html = getFile("../dialog/clients.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -1141,7 +1141,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   			    { key : "description",		label : "Descrizione",	sortable : false,	resizeable:true }
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/client'
+				source: server + 'client'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -1238,7 +1238,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		
 		YContainer.SimpleClientDialogForm.currentRecord = client;
 		if(YContainer.SimpleClientDialogForm.dialog == null) {
-			var html = getFile("dialog/simpleClientForm.html");
+			var html = getFile("../dialog/simpleClientForm.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -1274,7 +1274,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		YContainer.ClientDialogForm.currentRecord = client;
 
 		if(YContainer.ClientDialogForm.dialog == null) {
-			var html = getFile("dialog/clientForm.html");
+			var html = getFile("../dialog/clientForm.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -1327,7 +1327,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	/***************************** OrderDialog *********************/
 	YContainer.OrderDialog.createAndShow = function() {
 		if (YContainer.OrderDialog.dialog == null) {
-			var html = getFile("dialog/orders.html");
+			var html = getFile("../dialog/orders.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -1372,7 +1372,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   			    { key : "client",		label : "Id Cliente",	sortable : true, 	resizeable:true, width: 50, formatter: YContainer.OrderDialog.getClient, allowHTML: true}
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/order'
+				source: server + 'order'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {
@@ -1473,7 +1473,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		YContainer.OrderDialogForm.currentRecord = order;
 		
 		if(YContainer.OrderDialogForm.dialog == null) {
-			var html = getFile("dialog/orderForm.html");
+			var html = getFile("../dialog/orderForm.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -1520,7 +1520,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 	YContainer.SelectClientDialog.createAndShow = function(order) {
 		YContainer.SelectClientDialog.order = order;
 		if(YContainer.SelectClientDialog.dialog == null) {
-			var html = getFile("dialog/selectClients.html");
+			var html = getFile("../dialog/selectClients.html");
 			var elDiv = document.createElement("div");
 			elDiv.innerHTML = html;
 			document.body.appendChild(elDiv);
@@ -1559,7 +1559,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 				   			    { key : "description",		label : "Descrizione",	sortable : false,	resizeable:true }
 				   			   ];
 			var myDataSource = new Y.DataSource.IO({
-				source: server + 'backoffice/client'
+				source: server + 'client'
 			});
 			
 			myDataSource.plug(Y.Plugin.DataSourceXMLSchema, {

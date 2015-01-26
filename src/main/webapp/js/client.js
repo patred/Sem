@@ -152,7 +152,7 @@ SEM.BussinessObject.User = function (data) {
 	 * 	</user>
 	 */
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/user";
+	this.base.servletpath = "user";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;
@@ -188,7 +188,7 @@ SEM.BussinessObject.Employee = function (data) {
 	 */
 
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/employee";
+	this.base.servletpath = "employee";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;
@@ -227,7 +227,7 @@ SEM.BussinessObject.Manager = function (data) {
 	 */
 
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/manager";
+	this.base.servletpath = "manager";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;
@@ -259,7 +259,7 @@ SEM.BussinessObject.Manager = function (data) {
 
 SEM.BussinessObject.Client = function (data) {
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/client";
+	this.base.servletpath = "client";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;
@@ -303,7 +303,7 @@ SEM.BussinessObject.Order = function (data) {
 	 */
 	
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/order";
+	this.base.servletpath = "order";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;
@@ -358,7 +358,7 @@ SEM.BussinessObject.EmployeeOrder = function (data) {
 	 */
 	
 	this.base = new SEM.BussinessObject.BaseObject();
-	this.base.servletpath = "backoffice/employeeorder";
+	this.base.servletpath = "employeeorder";
 	this.base.init(data);
 	
 	this.setToDelete = this.base.setToDelete;
@@ -414,5 +414,5 @@ SEM.BussinessMethos.saveBussinesObject = function(object) {
 
 
 SEM.BussinessMethos.getNOrder = function(employeeId){
-	return syncRequest(server + "backoffice/employeeorder/employee/" + employeeId, "GET", SEM.BussinessMethos.genericCallback);
+	return syncRequest(server + "employeeorder/employee/" + employeeId, "GET", SEM.BussinessMethos.genericCallback);
 };

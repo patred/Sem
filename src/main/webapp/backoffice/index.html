@@ -9,14 +9,14 @@
 		
 -->
 
-		<script src="js/yui-min.js"></script>
-		<script src="js/jquery-2.1.3.min.js"></script>
+		<script src="../js/yui-min.js"></script>
+		<script src="../js/jquery-2.1.3.min.js"></script>
 		
-		<link rel="stylesheet" type="text/css" href="css/main.css">
+		<link rel="stylesheet" type="text/css" href="../css/main.css">
 		
-		<script type="text/javascript" src="js/utility.js"></script>
-		<script type="text/javascript" src="js/client.js"></script>
-		<script type="text/javascript" src="js/ui.js"></script>
+		<script type="text/javascript" src="../js/utility.js"></script>
+		<script type="text/javascript" src="../js/client.js"></script>
+		<script type="text/javascript" src="../js/ui.js"></script>
 		
     </head>
     
@@ -95,7 +95,7 @@
     	<div id="waitDialog">
     		<div class="yui3-widget-bd">
     			<div>Loading, please wait...</div>
-    			<div><img src="images/loading.gif" /></div>
+    			<div><img src="../images/loading.gif" /></div>
     		</div>
     	</div>
     	
@@ -107,27 +107,22 @@
 		    <div class="yui3-widget-bd">
 		    	<form id="loginForm" action="services/none" method="post" name="login" >
 					<div class="smallTitle" id="loginDialogWelcome">Benvenuto nel Synclab Employees Manager.</div>
-					<br id="loginDialogBr" />
-					<div class="smallText">
-						<table class="table_space" cellpadding="5" cellspacing="5" border="0" width="100%">
-							<tr>
-								<td style="width: 80px"><label for="username" id="loginDialogName">Username:</label></td>
-								<td colspan="2"><input type="text" name="username" id="username" class="textBox" style="width: 97%" /></td>
-							</tr>
-							<tr>
-								<td><label for="password">Password:</label></td>
-								<td colspan="2"><input type="password" name="password" id="password" class="textBox" style="width: 97%" /></td>
-							</tr>
-							<tr id="serverTR">
-								<td><label for="server">Server:</label></td>
-								<td colspan="2"><input type="text" name="server" id="server" class="textBox" style="width: 97%" value="http://localhost:8080/sem/"/></td>
-							</tr>
-						</table>
+					
+					<div>
+						<label style="margin: o auto;">Username:</label>
+						<input type="text" name="username" id="username" style="margin: o auto; width: 50%" />
+					</div>
+					<div>
+						<label style="margin: o auto;">Password:</label>
+						<input type="password" name="password" id="password" style="margin: o auto; width: 50%" />
+					</div>
+					<div id="serverTR">
+						<label style="margin: o auto;">Server:</label>
+						<input type="text" name="server" id="server" style=" margin: o auto; width: 50%" value="http://localhost:8080/sem/"/>
 					</div>
 				</form>
 		    </div>
 		</div>
-
 
     </body>
     
