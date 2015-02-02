@@ -6,8 +6,8 @@ var password;
 function alertContents() {
 	result = document.getElementById("result");
 	if (httpRequest.readyState == 4) {
-		if (httpRequest.status == 204) {
-			console.log("Logged!");
+		if (httpRequest.status == 200) {
+			prepareHomePage();
 			//result.innerHTML = "Logged!";
 		} else if (httpRequest.status == 401) {
 			console.log("Unauthorzed!");
@@ -34,4 +34,23 @@ function sendRequest() {
 	httpRequest.open('POST', 'services/login', true);
 	httpRequest.setRequestHeader("Content-Type", "application/json");
 	httpRequest.send("username="+username.value+"&password="+password.value);
+}
+
+function prepareHomePage() {
+	console.log("Logged!");
+	if(httpRequest != null) {
+		console.log(httpRequest);
+	}
+}
+
+function isLogged() {
+	if (window.XMLHttpRequest) { // Mozilla, Safari, ...
+		httpRequest = new XMLHttpRequest();
+	} else if (window.ActiveXObject) { // IE
+		httpRequest = new ActiveXObject("Microsoft.XMLHTTP");
+	}
+	
+	httpRequest.onreadystatechange = alertContents;
+	httpRequest.open('GET', 'services/login', true);
+	httpRequest.setRequestHeader("Content-Type", "application/json");
 }

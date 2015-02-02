@@ -115,6 +115,10 @@ div#loginForm {
 	width: 50%;
 }
 
+div#result {
+	color: red;
+}
+
 #loginForm div input {
     float: right;
     margin-right: 120px;
@@ -122,12 +126,6 @@ div#loginForm {
 
 #loginForm div label {
     float: left;
-}
-
-#loginForm > input {
-    border: 1px solid black;
-    float: left;
-    margin-top: 10px;
 }
 
 .main {

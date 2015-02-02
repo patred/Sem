@@ -1,12 +1,12 @@
-package it.synclab.patred.sem.provider;
+package it.synclab.patred.sem.rest.provider;
+
+import javax.ws.rs.ext.Provider;
 
 import it.synclab.patred.sem.annotations.AuthenticatedUser;
 import it.synclab.patred.sem.auth.LoginCookieManager;
 import it.synclab.patred.sem.auth.UserEntry;
 import it.synclab.patred.sem.persistence.entities.User;
 import it.synclab.patred.sem.services.persistent.UserService;
-
-import javax.ws.rs.ext.Provider;
 
 import com.google.inject.Inject;
 import com.sun.jersey.api.core.HttpContext;
@@ -46,7 +46,7 @@ class InjectableUser extends AbstractHttpContextInjectable<User> {
 		HttpRequestContext request = context.getRequest();
 		UserEntry userEntry = loginCookieManager.getUserEntryFromCookies(request.getCookies());
 		
-		if(userEntry != null)
+		if (userEntry != null)
 			return userService.getByUsernameUser(userEntry.getUserid());
 		return null;
 	}
