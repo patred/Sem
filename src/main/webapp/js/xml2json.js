@@ -9,26 +9,26 @@ Software Foundation. It is distributed without any warranty.
 
 xml2json={
 	parser:function(xmlcode,ignoretags,debug){
-		if(!ignoretags){ignoretags=""};
+		if(!ignoretags){ignoretags="";};
 		xmlcode=xmlcode.replace(/\s*\/>/g,'/>');
 		xmlcode=xmlcode.replace(/<\?[^>]*>/g,"").replace(/<\![^>]*>/g,"");
-		if (!ignoretags.sort){ignoretags=ignoretags.split(",")};
+		if (!ignoretags.sort){ignoretags=ignoretags.split(",");};
 		var x=this.no_fast_endings(xmlcode);
 		x=this.attris_to_tags(x);
 		x=escape(x);
 		x=x.split("%3C").join("<").split("%3E").join(">").split("%3D").join("=").split("%22").join("\"");
 		for (var i=0;i<ignoretags.length;i++){
 			x=x.replace(new RegExp("<"+ignoretags[i]+">","g"),"*$**"+ignoretags[i]+"**$*");
-			x=x.replace(new RegExp("</"+ignoretags[i]+">","g"),"*$***"+ignoretags[i]+"**$*")
+			x=x.replace(new RegExp("</"+ignoretags[i]+">","g"),"*$***"+ignoretags[i]+"**$*");
 		};
 		x='<JSONTAGWRAPPER>'+x+'</JSONTAGWRAPPER>';
 		this.xmlobject={};
 		var y=this.xml_to_object(x).jsontagwrapper;
-		if(debug){y=this.show_json_structure(y,debug)};
-		return y
+		if(debug){y=this.show_json_structure(y,debug);};
+		return y;
 	},
 	xml_to_object:function(xmlcode){
-		var x=xmlcode.replace(/<\//g,"§");
+		var x=xmlcode.replace(/<\//g,"ï¿½");
 		x=x.split("<");
 		var y=[];
 		var level=0;
@@ -36,9 +36,9 @@ xml2json={
 		for (var i=1;i<x.length;i++){
 			var tagname=x[i].split(">")[0];
 			opentags.push(tagname);
-			level++
-			y.push(level+"<"+x[i].split("§")[0]);
-			while(x[i].indexOf("§"+opentags[opentags.length-1]+">")>=0){level--;opentags.pop()}
+			level++;
+			y.push(level+"<"+x[i].split("ï¿½")[0]);
+			while(x[i].indexOf("ï¿½"+opentags[opentags.length-1]+">")>=0){level--;opentags.pop();}
 		};
 		var oldniva=-1;
 		var objname="this.xmlobject";
@@ -50,35 +50,35 @@ xml2json={
 			var rest=y[i].split(">")[1];
 			if(niva<=oldniva){
 				var tabort=oldniva-niva+1;
-				for (var j=0;j<tabort;j++){objname=objname.substring(0,objname.lastIndexOf("."))}
+				for (var j=0;j<tabort;j++){objname=objname.substring(0,objname.lastIndexOf("."));}
 			};
 			objname+="."+tagnamn;
 			var pobject=objname.substring(0,objname.lastIndexOf("."));
-			if (eval("typeof "+pobject) != "object"){preeval+=pobject+"={value:"+pobject+"};\n"};
+			if (eval("typeof "+pobject) != "object"){preeval+=pobject+"={value:"+pobject+"};\n";};
 			var objlast=objname.substring(objname.lastIndexOf(".")+1);
 			var already=false;
-			for (k in eval(pobject)){if(k==objlast){already=true}};
+			for (k in eval(pobject)){if(k==objlast){already=true;}};
 			var onlywhites=true;
 			for(var s=0;s<rest.length;s+=3){
-				if(rest.charAt(s)!="%"){onlywhites=false}
+				if(rest.charAt(s)!="%"){onlywhites=false;}
 			};
 			if (rest!="" && !onlywhites){
 				if(rest/1!=rest){
 					rest="'"+rest.replace(/\'/g,"\\'")+"'";
 					rest=rest.replace(/\*\$\*\*\*/g,"</");
 					rest=rest.replace(/\*\$\*\*/g,"<");
-					rest=rest.replace(/\*\*\$\*/g,">")
+					rest=rest.replace(/\*\*\$\*/g,">");
 				}
 			} 
-			else {rest="{}"};
-			if(rest.charAt(0)=="'"){rest='unescape('+rest+')'};
-			if (already && !eval(objname+".sort")){preeval+=objname+"=["+objname+"];\n"};
+			else {rest="{}";};
+			if(rest.charAt(0)=="'"){rest='unescape('+rest+')';};
+			if (already && !eval(objname+".sort")){preeval+=objname+"=["+objname+"];\n";};
 			var before="=";after="";
-			if (already){before=".push(";after=")"};
+			if (already){before=".push(";after=")";};
 			var toeval=preeval+objname+before+rest+after;
 			eval(toeval);
-			if(eval(objname+".sort")){objname+="["+eval(objname+".length-1")+"]"};
-			oldniva=niva
+			if(eval(objname+".sort")){objname+="["+eval(objname+".length-1")+"]";};
+			oldniva=niva;
 		};
 		return this.xmlobject
 	},

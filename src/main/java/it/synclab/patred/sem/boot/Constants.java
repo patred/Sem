@@ -22,6 +22,13 @@ public class Constants {
 	public static final String ROLE_MANAGER = "semmanager";
 	public static final String ROLE_OPERATOR = "semoperator";
 	
+	/* suffix */
+	public static final String SUFFIX_LOACL = "local.";
+	public static final String SUFFIX_UAT = "uat.";
+	public static final String SUFFIX_PREPROD = "preprod.";
+	public static final String SUFFIX_PROD = "prod.";
+
+	
 	/* variables */
 	private Properties props;
 	private String hostname;
@@ -35,16 +42,16 @@ public class Constants {
 	@Inject
 	public Constants() {
 		
-		suffix = "local.";
+		suffix = SUFFIX_LOACL;
 		
 		hostname = System.getenv("HOSTNAME");
 		if (hostname != null) {
 			if (hostname.toLowerCase(Locale.ITALIAN).startsWith("preprod")) {
-				suffix = "preprod.";
+				suffix = SUFFIX_PREPROD;
 			} else if (hostname.toLowerCase(Locale.ITALIAN).startsWith("prod")) {
-				suffix = "prod.";
+				suffix = SUFFIX_PROD;
 			} else if (hostname.toLowerCase(Locale.ITALIAN).startsWith("uat")) {
-				suffix = "uat.";
+				suffix = SUFFIX_UAT;
 			}
 		} else {
 			hostname = "HOSTNAME";
@@ -65,6 +72,22 @@ public class Constants {
 			logger.error("Properties file not loaded!", ioe);
 		}
 		
+	}
+	
+	public boolean isLocal() {
+		return SUFFIX_LOACL.equals(this.suffix);
+	}
+	
+	public boolean isUat() {
+		return SUFFIX_UAT.equals(this.suffix);
+	}
+	
+	public boolean isPreprod() {
+		return SUFFIX_PREPROD.equals(this.suffix);
+	}
+	
+	public boolean isProd() {
+		return SUFFIX_PROD.equals(this.suffix);
 	}
 	
 	public String get(String key) {

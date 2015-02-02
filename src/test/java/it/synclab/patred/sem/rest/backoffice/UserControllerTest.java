@@ -8,9 +8,6 @@ import it.synclab.patred.sem.persistence.entities.User;
 
 import java.util.List;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -23,7 +20,6 @@ public class UserControllerTest extends Base {
 		cleanDatabase();
 	}
 	
-	@SuppressWarnings("unchecked")
 	@Test
 	public void createUser() {
 		EmployeeController eController = injector.getInstance(EmployeeController.class);

@@ -1,137 +1,163 @@
-
-
 html {
 	background-color: #D8D8DA;
 	font-family: Comic Sans MS, Verdana, sans-serif;
-    font-size: larger;
-    font-style: normal;
+	font-size: larger;
+	font-style: normal;
 	float: left;
 }
 
-.container{
+.container {
 	margin: 0 auto;
-    width: 75%;
+	width: 75%;
 }
 
-.header{
+.header {
 	-moz-border-bottom-colors: none;
-    -moz-border-left-colors: none;
-    -moz-border-right-colors: none;
-    -moz-border-top-colors: none;
-    border-color: black black -moz-use-text-color;
-    border-image: none;
-    border-style: solid solid none;
-    border-width: 1px 1px medium;
-    float: left;
-    width: 100%;
+	-moz-border-left-colors: none;
+	-moz-border-right-colors: none;
+	-moz-border-top-colors: none;
+	border-color: black black -moz-use-text-color;
+	border-image: none;
+	border-style: solid solid none;
+	border-width: 1px 1px medium;
+	float: left;
+	width: 100%;
 }
 
-.logo{
+.logo {
 	float: left;
 }
 
-.title{
-	float: right;
-	float: right;
-    font-size: 24px;
-    line-height: 24px;
-    margin-right: 3%;
-    margin-top: 10%;
+.title {
+	color: #000052;
+	float: left;
+	font-size: 28px;
+	font-weight: bold;
+	line-height: 28px;
+	margin-top: 10%;
 }
 
 div#hormenu {
-    width: 100%;
-    float: left;
-    margin: 0;
-    padding: 0;
-    border-left: 1px solid black;
-    border-right: 1px solid black;
-    border-top: 1px solid black;
-    background: #FF9C00;
+	width: 100%;
+	float: left;
+	margin: 0;
+	padding: 0;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-top: 1px solid black;
+	background: #FF9C00;
 }
 
-div#hormenu ul
-{
+div#hormenu ul {
 	font-family: Comic Sans MS, Verdana, sans-serif;
-    font-size: 13px;
-    margin: 0;
-    padding: 0;
-    list-style-type: none;
+	font-size: 13px;
+	margin: 0;
+	padding: 0;
+	list-style-type: none;
 }
 
-div#hormenu li
-{
-    width:150px;
-    float:left;
-    margin: 0;
-    padding: 0;
-    border-right: 1px solid black;
+div#hormenu li {
+	width: 150px;
+	float: left;
+	margin: 0;
+	padding: 0;
+	border-right: 1px solid black;
 }
 
-div#hormenu a
-{
-    display: block;
-    padding: 5px;
-    color: #00008D;
-    text-decoration: none;
-}
- 
-div#hormenu a:hover
-{
-    background-color: #00008D;
-    color: #FF9C00;
-    text-decoration: none;
+div#hormenu a {
+	display: block;
+	padding: 5px;
+	color: #00008D;
+	text-decoration: none;
 }
 
-div#hormenu li ul
-{
-    display: none
+div#hormenu a:hover {
+	background-color: #00008D;
+	color: #FF9C00;
+	text-decoration: none;
 }
 
-div#hormenu li:hover ul
-{
-    display: block;
-    position: absolute;
-    z-index:1;
-    width:150px;
-    padding: 0;
-    margin: 0 0 0 -1px;
-    border:1px solid black;
-    background: #FF9C00;
+div#hormenu li ul {
+	display: none
 }
 
-div#hormenu li li   { border:none; width:150px; }
-div#hormenu li li a { padding:2px 2px 2px 10px; }
+div#hormenu li:hover ul {
+	display: block;
+	position: absolute;
+	z-index: 1;
+	width: 150px;
+	padding: 0;
+	margin: 0 0 0 -1px;
+	border: 1px solid black;
+	background: #FF9C00;
+}
 
-.main{
+div#hormenu li li {
+	border: none;
+	width: 150px;
+}
+
+div#hormenu li li a {
+	padding: 2px 2px 2px 10px;
+}
+
+div#login {
+	border-top: 1px solid black;
+	border-left: 1px solid black;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	float: left;
+	width: 100%;
+}
+
+div#loginForm {
+	float: right;
+	width: 50%;
+}
+
+#loginForm div input {
+    float: right;
+    margin-right: 120px;
+}
+
+#loginForm div label {
+    float: left;
+}
+
+#loginForm > input {
+    border: 1px solid black;
+    float: left;
+    margin-top: 10px;
+}
+
+.main {
 	border-top: 1px solid green;
 	border-left: 1px solid black;
-    border-right: 1px solid black;
-    border-bottom: 1px solid green;
+	border-right: 1px solid black;
+	border-bottom: 1px solid green;
 	float: left;
-    height: 50px;
-    width: 100%;
+	width: 100%;
 }
 
-.footer{
+.footer {
 	border-left: 1px solid black;
-    border-right: 1px solid black;
-    border-bottom: 1px solid black;
-    float: left;
-    font-size: 11px;
-    height: 50px;
-    line-height: 18px;
-    width: 100%;
+	border-right: 1px solid black;
+	border-bottom: 1px solid black;
+	float: left;
+	font-size: 11px;
+	height: 50px;
+	line-height: 18px;
+	width: 100%;
 }
 
 .one-half {
 	float: left;
-    margin: 20px 10px;
-    width: 28%;
+	margin: 20px 10px;
+	width: 28%;
 }
 
 .one-half-last {
 	float: left;
-    margin: 20px 10px;
-    width: 65%;
+	margin: 20px 10px;
+	width: 65%;
 }

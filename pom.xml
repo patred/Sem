@@ -14,6 +14,7 @@
 		<jsp.version>2.0</jsp.version>
 		<servlet.version>2.5</servlet.version>
 		<jersey.version>1.18.3</jersey.version>
+		<infinispan.version>5.1.1.FINAL</infinispan.version>
 		<hibernatecore.version>4.3.7.Final</hibernatecore.version>
 		<hibernatejmx.version>3.5.6-Final</hibernatejmx.version>
 		<targetJdk>1.7</targetJdk>
@@ -323,6 +324,11 @@
 			<version>2.4</version>
 		</dependency>
 
+		<dependency>
+			<groupId>org.infinispan</groupId>
+			<artifactId>infinispan-core</artifactId>
+			<version>${infinispan.version}</version>
+		</dependency>
 
 		<dependency>
 			<groupId>junit</groupId>
@@ -351,11 +357,7 @@
 			<version>2.3.2</version>
 			<scope>test</scope>
 		</dependency>
-
-
-
-
-
+	
 	</dependencies>
 	<developers>
 		<developer>

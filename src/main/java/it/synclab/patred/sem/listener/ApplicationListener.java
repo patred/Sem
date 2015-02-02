@@ -3,6 +3,7 @@ package it.synclab.patred.sem.listener;
 import it.synclab.patred.sem.boot.BootstrapAdminAndEmployee;
 import it.synclab.patred.sem.boot.Constants;
 import it.synclab.patred.sem.modules.SemWebModule;
+import it.synclab.patred.sem.services.InfinispanService;
 import it.synclab.patred.sem.services.persistent.HibernateSessionService;
 import it.synclab.patred.sem.util.LogUtils;
 
@@ -67,6 +68,9 @@ public class ApplicationListener extends GuiceServletContextListener {
 		 */
 		
 		checkAllDefaultDataOnBD();
+		
+		injector.getInstance(InfinispanService.class);
+
 		return injector;
 		
 	}
@@ -160,6 +164,10 @@ public class ApplicationListener extends GuiceServletContextListener {
 		
 		HibernateSessionService hibernateSessionService = injector.getInstance(HibernateSessionService.class);
 		hibernateSessionService.shutdown();
+		
+		InfinispanService infinispanService = injector.getInstance(InfinispanService.class);
+		infinispanService.shutdown();
+		
 		try {
 			LoggerContext lc = (LoggerContext) LoggerFactory.getILoggerFactory();
 			if (lc.isStarted())

@@ -127,7 +127,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 				}
 			}
 		});
-	}
+	};
 
 	YContainer.waitDialog = new Y.Panel({
 		contentBox : "#waitDialog",
@@ -174,7 +174,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		// the callback is not executed, and is
 		// callback reference removed, so it won't persist
 		this.callback = false;
-	}
+	};
 
 	YContainer.alertDialog.onOK = function(e) {
 		e.preventDefault();
@@ -185,7 +185,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 		}
 		// callback reference removed, so it won't persist
 		this.callback = false;
-	}
+	};
 
 	function onAlertMessage(message, callback) {
 		Y.one("#alertDialog .message").setContent(message);

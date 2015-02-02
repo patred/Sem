@@ -22,6 +22,26 @@ public class CalendarService {
 		return new Date();
 	}
 	
+	/**
+	 * ritorna la Data corrente più dateadd giorni
+	 * @param dateadd
+	 * @return
+	 */
+	public Date getCurrentDate(int dateadd) {
+		return getCurrentCalendar(dateadd).getTime();
+	}
+	
+	/**
+	 * ritorna il Calendar corrente più dateadd giorni
+	 * @param dateadd
+	 * @return
+	 */
+
+	public Calendar getCurrentCalendar(int dateadd) {
+		Calendar cal = getCurrentCalendar();
+		cal.add(Calendar.DATE, dateadd);
+		return cal;
+	}
 	public Date getNextMonthDate() {
 		Calendar cal = getCurrentCalendar();
 		cal.add(Calendar.MONTH, 1);

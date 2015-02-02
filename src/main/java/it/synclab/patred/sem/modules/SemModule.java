@@ -1,8 +1,10 @@
 package it.synclab.patred.sem.modules;
 
+import it.synclab.patred.sem.annotations.MustAuthenticate;
 import it.synclab.patred.sem.annotations.NoTransactional;
 import it.synclab.patred.sem.annotations.Transactional;
 import it.synclab.patred.sem.aop.LogInterceptor;
+import it.synclab.patred.sem.aop.MustAuthenticateInterceptor;
 import it.synclab.patred.sem.aop.TransactionInterceptor;
 import it.synclab.patred.sem.aop.TrimAndNullInterceptor;
 import it.synclab.patred.sem.util.EmptyUriInfo;
@@ -46,6 +48,13 @@ public class SemModule extends AbstractModule {
 		bindInterceptor(Matchers.annotatedWith(Path.class),
 				Matchers.annotatedWith(GET.class).or(Matchers.annotatedWith(POST.class)).or(Matchers.annotatedWith(PUT.class)).or(Matchers.annotatedWith(DELETE.class)),
 				trimAndNullInterceptor, logInterceptor);
+		
+		// AOP per l'autenticazione
+		MustAuthenticateInterceptor mustAuth = new MustAuthenticateInterceptor();
+		requestInjection(mustAuth);
+
+		bindInterceptor(Matchers.any(), Matchers.annotatedWith(MustAuthenticate.class), mustAuth);
+		bindInterceptor(Matchers.annotatedWith(MustAuthenticate.class), Matchers.any(), mustAuth);
 		
 	}
 }

@@ -4,6 +4,7 @@
 		<meta http-equiv="content-type" content="text/html; charset=utf-8">
 		<title>Synclab Employees Manager</title>
 		<script src="js/jquery-2.1.3.min.js"></script>
+		<script src="js/login.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 	</head>
 
@@ -14,11 +15,25 @@
 					<img height="188px" width="265px" alt="SyncLab"
 						src="images/logo_synclab.png">
 				</div>
-				<div class="title">Synclab Employees Manager - Gestione
-					Consuntivi</div>
+				<div class="title">Employees Manager - Gestione Consuntivi</div>
 			</div>
 			
-			<div id="hormenu">
+			<div id="login">
+				<div id="loginForm">
+					<div id="result"></div>
+					<div>
+						<label>Username: </label>
+						<input type="text" name="username" id ="username">
+					</div>
+					<div>
+						<label>Password: </label>
+						<input type="password" name="password" id="password">
+					</div>
+					<input type="submit" value="login" onclick="sendRequest();">
+				</div>
+			</div>
+			
+			<div id="hormenu" style="display : none;">
 				<ul>
 					<li><a href="#">Gestione Consuntivi</a>
 						<ul>
@@ -37,7 +52,7 @@
 				</ul>
 			</div>
 		
-			<div id="main" class="main">MAIN</div>
+			<div id="main" class="main" style="display : none;">MAIN</div>
 
 			<div class="footer">
 				<div class="one-half">
