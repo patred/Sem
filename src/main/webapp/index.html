@@ -15,7 +15,11 @@
 					<img height="188px" width="265px" alt="SyncLab"
 						src="images/logo_synclab.png">
 				</div>
-				<div class="title">Employees Manager - Gestione Consuntivi</div>
+				<div class="title">
+					<div class="welcome" style="visibility : hidden;"></div>
+					<div class="logout" style="visibility : hidden;"><a href="services/logout">LogOut</a></div>
+					<div class="descr">Employees Manager - Gestione Consuntivi</div>
+				</div>
 			</div>
 			
 			<div id="login">
@@ -30,7 +34,7 @@
 						<input type="password" name="password" id="password">
 					</div>
 					<div>
-						<input type="submit" value="login" onclick="sendRequest();">
+						<input type="submit" value="login" onclick="login();">
 					</div>
 				</div>
 			</div>

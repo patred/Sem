@@ -321,7 +321,6 @@ function get( key )
 
 function remove( key )
 {
-    var result = null;
     var elementIndex = this.findIt( key );
 
     if( elementIndex != (-1) )

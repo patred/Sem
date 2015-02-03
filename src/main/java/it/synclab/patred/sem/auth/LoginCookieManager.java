@@ -23,11 +23,11 @@ public class LoginCookieManager {
 		String cookievalue = userid + "-" + token;
 		int maxAge = (int) (validTo.getTime() - new Date().getTime()) / 1000;
 		
-		return response.cookie(new NewCookie(LOGGIN_COOKIE_NAME, cookievalue, null, null, null, maxAge, false));
+		return response.cookie(new NewCookie(LOGGIN_COOKIE_NAME, cookievalue, "/", null, null, maxAge, false));
 	}
 	
 	public ResponseBuilder logout(ResponseBuilder response) {
-		return response.cookie(new NewCookie(LOGGIN_COOKIE_NAME, "-1"));
+		return response.cookie(new NewCookie(LOGGIN_COOKIE_NAME, "-1", "/", null, null, 0, false));
 	}
 	
 	public UserEntry getUserEntryFromCookies(Map<String, javax.ws.rs.core.Cookie> cookies) {
