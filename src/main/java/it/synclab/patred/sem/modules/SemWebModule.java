@@ -17,7 +17,7 @@ public class SemWebModule extends ServletModule {
 		
 		params.put(ResourceConfig.FEATURE_IMPLICIT_VIEWABLES, "false");
 		params.put(ResourceConfig.FEATURE_REDIRECT, "true");
-		params.put(PackagesResourceConfig.PROPERTY_PACKAGES, "it.synclab.patred.sem.rest, it.synclab.patred.webcontrollers");
+		params.put(PackagesResourceConfig.PROPERTY_PACKAGES, "it.synclab.patred.sem.rest, it.synclab.patred.sem.webcontrollers");
 		params.put(ServletContainer.PROPERTY_WEB_PAGE_CONTENT_REGEX, ".*\\.(htm|html|css|js|jsp|png|jpeg|jpg|gif)$");
 		params.put(ResourceConfig.PROPERTY_RESOURCE_FILTER_FACTORIES,
 				"com.sun.jersey.api.container.filter.RolesAllowedResourceFilterFactory, it.synclab.patred.sem.rest.filter.CacheFilterFactory");

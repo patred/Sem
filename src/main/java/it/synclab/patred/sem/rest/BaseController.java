@@ -2,6 +2,7 @@ package it.synclab.patred.sem.rest;
 
 import it.synclab.patred.sem.boot.Constants;
 import it.synclab.patred.sem.services.CalendarService;
+import it.synclab.patred.sem.services.cluster.UserTokenService;
 import it.synclab.patred.sem.util.LogUtils;
 
 import java.nio.charset.Charset;
@@ -20,6 +21,9 @@ public class BaseController {
 	
 	@Inject
 	protected Constants constants;
+	
+	@Inject
+	protected UserTokenService userTokenService;
 	
 	public BaseController() {
 		logger = LoggerFactory.getLogger(LogUtils.formatClassName(this.getClass()));

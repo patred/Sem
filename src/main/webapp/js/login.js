@@ -3,22 +3,6 @@ var result;
 var username;
 var password;
 
-function alertContents() {
-	result = document.getElementById("result");
-	if (httpRequest.readyState == 4) {
-		if (httpRequest.status == 200) {
-			prepareHomePage();
-			// result.innerHTML = "Logged!";
-		} else if (httpRequest.status == 401) {
-			console.log("Unauthorzed!");
-			result.innerHTML = "Unauthorzed!";
-		} else {
-			console.log('There was a problem with the request.');
-			result.innerHTML = "There was a problem with the request.!";
-		}
-	}
-}
-
 function login(callback) {
 	username = $('#username').val();
 	password = $('#password').val();

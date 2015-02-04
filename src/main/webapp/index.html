@@ -5,6 +5,7 @@
 		<title>Synclab Employees Manager</title>
 		<script src="js/jquery-2.1.3.min.js"></script>
 		<script src="js/login.js"></script>
+		<script src="js/semClient.js"></script>
 		<link rel="stylesheet" type="text/css" href="css/main.css">
 	</head>
 
@@ -43,8 +44,8 @@
 				<ul>
 					<li><a href="#">Gestione Consuntivi</a>
 						<ul>
-							<li><a href="#">Consuntivi</a></li>
-							<li><a href="#">Storico</a></li>
+							<li><a title="Consuntivi" href="#" onclick="SEM.SemClient.timesheet();return false;">Consuntivi</a>
+							<li><a title="Storico" href="#" onclick="SEM.SemClient.timesheetHistory();return false;">Storico</a></li>
 						</ul>
 					</li>
 					<li><a href="#">Gestione Spese</a>

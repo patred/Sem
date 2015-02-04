@@ -50,7 +50,8 @@ public class SystemController extends BaseController {
 			sb.append("!!Connessione database sem:\t");
 			oracle.ucp.jdbc.PoolDataSourceImpl dsSem = (oracle.ucp.jdbc.PoolDataSourceImpl) initContext.lookup("java:/comp/env/jdbc/semDbConnPool");
 			connection = dsSem.getConnection();
-			connection.commit();
+			connection.isValid(10);
+			//connection.commit();
 			sb.append(OK);
 			
 		} catch (Exception e) {
