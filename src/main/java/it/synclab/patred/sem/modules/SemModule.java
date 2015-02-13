@@ -4,6 +4,7 @@ import it.synclab.patred.sem.annotations.MustAuthenticate;
 import it.synclab.patred.sem.annotations.NoTransactional;
 import it.synclab.patred.sem.annotations.Transactional;
 import it.synclab.patred.sem.aop.LogInterceptor;
+import it.synclab.patred.sem.aop.ManageOutputExceptionInterceptor;
 import it.synclab.patred.sem.aop.MustAuthenticateInterceptor;
 import it.synclab.patred.sem.aop.TransactionInterceptor;
 import it.synclab.patred.sem.aop.TrimAndNullInterceptor;
@@ -44,10 +45,12 @@ public class SemModule extends AbstractModule {
 		
 		// AOP per log di chiamate, TrimAndNullable
 		LogInterceptor logInterceptor = new LogInterceptor();
+		ManageOutputExceptionInterceptor manageOutputException = new ManageOutputExceptionInterceptor();
 		TrimAndNullInterceptor trimAndNullInterceptor = new TrimAndNullInterceptor();
+
 		bindInterceptor(Matchers.annotatedWith(Path.class),
 				Matchers.annotatedWith(GET.class).or(Matchers.annotatedWith(POST.class)).or(Matchers.annotatedWith(PUT.class)).or(Matchers.annotatedWith(DELETE.class)),
-				trimAndNullInterceptor, logInterceptor);
+				logInterceptor, manageOutputException, trimAndNullInterceptor);
 		
 		// AOP per l'autenticazione
 		MustAuthenticateInterceptor mustAuth = new MustAuthenticateInterceptor();
