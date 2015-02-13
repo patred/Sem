@@ -2,12 +2,12 @@ package it.synclab.patred.sem.services.persistent;
 
 import it.synclab.patred.sem.util.LogUtils;
 
-import java.util.Properties;
-
 import org.hibernate.Session;
 import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
+import org.hibernate.boot.registry.StandardServiceRegistryBuilder;
 import org.hibernate.cfg.Configuration;
+import org.hibernate.service.ServiceRegistry;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -24,9 +24,14 @@ public class HibernateSessionService {
 		
 		if (sessionFactory != null)
 			return sessionFactory;
+		Configuration configuration = new Configuration();
+		configuration.configure("hibernate.cfg.xml");
+		logger.info("Hibernate Configuration loaded successfully.");
 		
-		Properties extraProperties = new Properties();
-		sessionFactory = new Configuration().addProperties(extraProperties).configure().buildSessionFactory();
+		ServiceRegistry serviceRegistry = new StandardServiceRegistryBuilder().applySettings(configuration.getProperties()).build();
+		logger.info("Hibernate serviceRegistry created successfully.");
+		
+		sessionFactory = configuration.buildSessionFactory(serviceRegistry);
 		
 		logger.info("Hibernate SessionFactory build successfully.");
 		

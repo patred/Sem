@@ -12,6 +12,7 @@ import it.synclab.patred.sem.services.persistent.EmployeeOrderService;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
 import it.synclab.patred.sem.services.persistent.ManagerService;
 import it.synclab.patred.sem.services.persistent.OrderService;
+import it.synclab.patred.sem.services.persistent.TimesheetService;
 import it.synclab.patred.sem.services.persistent.UserService;
 
 import java.security.NoSuchAlgorithmException;
@@ -43,6 +44,7 @@ public class Base {
 	protected static ManagerService managerService;
 	protected static OrderService orderService;
 	protected static ClientService clientService;
+	protected static TimesheetService timesheetService;
 	protected static Constants constants;
 	
 	@BeforeClass
@@ -62,6 +64,7 @@ public class Base {
 		managerService = injector.getInstance(ManagerService.class);
 		orderService = injector.getInstance(OrderService.class);
 		clientService = injector.getInstance(ClientService.class);
+		timesheetService = injector.getInstance(TimesheetService.class);
 		
 		constants = injector.getInstance(Constants.class);
 		
@@ -128,6 +131,7 @@ public class Base {
 	}
 	
 	protected void cleanDatabase() {
+		clearTimesheetService();
 		clearEmployeeOrderService();
 		clearEmployeeService();
 		clearManagerService();
@@ -159,6 +163,10 @@ public class Base {
 	
 	private void clearClientService() {
 		clientService.deleteAll();
+	}
+	
+	private void clearTimesheetService() {
+		timesheetService.deleteAll();
 	}
 	
 }

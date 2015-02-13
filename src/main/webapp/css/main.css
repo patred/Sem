@@ -6,8 +6,8 @@ html {
 	float: left;
 }
 
-.container {
-	margin: 0 auto;
+.sem-container {
+	margin: 5px auto;
 	width: 75%;
 }
 
@@ -129,6 +129,7 @@ div#login {
 }
 
 div#loginForm {
+	margin-top: 10px;
 	float: right;
 	width: 50%;
 }
@@ -139,11 +140,12 @@ div#result {
 
 #loginForm div input {
     float: right;
-    margin-right: 120px;
+    margin-right: 190px;
 }
 
 #loginForm div label {
     float: left;
+    margin-bottom: 20px;
 }
 
 .main {
@@ -176,4 +178,64 @@ div#result {
 	float: left;
 	margin: 20px 10px;
 	width: 65%;
+}
+
+/********* TIMESHEET *************************/
+div#Theader {
+	float: left;
+	width: 100%;
+}
+
+div#Tbody {
+	float: left;
+	width: 100%;
+	margin-bottom: 10px;
+}
+
+div#Tfooter {
+	float: left;
+}
+
+div.timesheets {
+	width: 830px;
+	margin: 10px auto;
+}
+
+div.timesheet {
+	float: left;
+	width: 100%;
+}
+
+div.riga {
+	float: left;
+	width: 100%;
+}
+
+div.top-border {
+	border-top: 1px solid;
+}
+
+div.right-border {
+	border-right: 1px solid;
+}
+
+div.bottom-border {
+	border-bottom: 1px solid;
+}
+
+div.left-border {
+	border-left: 1px solid;
+}
+
+div.riga.odd {background-color: white;}
+div.riga.even {background-color: lightsteelblue}
+
+div.colonna {
+	float: left;
+	width: 160px;
+	text-align: center;
+}
+
+div.head {
+	font-weight: bold;
 }

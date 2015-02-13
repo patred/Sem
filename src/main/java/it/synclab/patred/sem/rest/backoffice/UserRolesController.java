@@ -1,9 +1,13 @@
 package it.synclab.patred.sem.rest.backoffice;
 
 import it.synclab.patred.sem.annotations.Transactional;
+import it.synclab.patred.sem.auth.LoginCookieManager;
+import it.synclab.patred.sem.auth.UserEntry;
 import it.synclab.patred.sem.persistence.entities.User;
 import it.synclab.patred.sem.services.persistent.UserService;
 import it.synclab.patred.sem.transentities.UserResponse;
+
+import java.util.Date;
 
 import javax.ws.rs.FormParam;
 import javax.ws.rs.POST;
@@ -25,21 +29,28 @@ public class UserRolesController extends BaseBackofficeController {
 	private UserService userservice;
 	
 	@Inject
+	private LoginCookieManager loginCookieManager;
+	
+	@Inject
 	public UserRolesController() {
 	}
 	
 	@POST
 	@Produces(MediaType.APPLICATION_XML)
 	public Object getMyRoles(@FormParam("username") String username, @FormParam("password") String password) {
-		UserResponse response = new UserResponse();
 		
-		boolean authenticate = userservice.authenticate(username, password);
-		if (!authenticate)
-			return Response.status(Status.UNAUTHORIZED).build();
-		User user = userservice.getByUsernameUser(username);
-		response.user = user.getUsername();
-		response.role = user.getRole().name();
+		if (userservice.authenticate(username, password)) {
+			UserResponse response = new UserResponse();
+			User user = userservice.getByUsernameUser(username);
+			UserEntry userEntry = userTokenService.put(username);
+			Date expirationDate = userTokenService.getExpirationDate(username);
+			response.user = user.getUsername();
+			response.role = user.getRole().name();
+			
+			return loginCookieManager.login(Response.ok(response), username, userEntry.getToken(), expirationDate).build();
+		}
 		
-		return response;
+		return Response.status(Status.UNAUTHORIZED).build();
+		
 	}
 }

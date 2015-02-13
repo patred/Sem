@@ -20,7 +20,7 @@ public class InfinispanService extends BaseService {
 	public InfinispanService(Constants constants) throws IOException {
 		logger.info("Inizializzazione {}.", this.getClass().getName());
 
-		//if (constants.isProd())
+		if (constants.isProd())
 			goInfinispan();
 	}
 

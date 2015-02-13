@@ -63,6 +63,7 @@ function handlePage(data){
 	$('#login').hide();
 	$('#hormenu').show();
 	$('#main').show();
+	SEM.SemClient.timesheet();
 }
 
 function isLoggedAjax() {
@@ -73,6 +74,12 @@ function isLoggedAjax() {
 		success : function(data) {
 			console.log("user: " + data.user);
 			console.log("role: " + data.role);
+			handlePage(data);
+		},
+		statusCode : {
+			401 : function() {
+				console.log('Unauthorzed!');
+			}
 		}
 	});
 }

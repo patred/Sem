@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <!DOCTYPE hibernate-configuration PUBLIC
     "-//Hibernate/Hibernate Configuration DTD//EN"
-    "http://hibernate.sourceforge.net/hibernate-configuration-3.0.dtd">
+    "http://www.hibernate.org/dtd/hibernate-configuration-3.0.dtd">
 
 <hibernate-configuration>
 
@@ -9,7 +9,8 @@
 		<property name="hibernate.search.default.directory_provider">
 			org.hibernate.search.store.FSDirectoryProvider
 		</property>
-		<property name="connection.url">jdbc:hsqldb:file:sem</property>
+		
+		<property name="connection.url">jdbc:hsqldb:mem:sem</property>
 		<property name="connection.username">sa</property>
 		<property name="connection.password"></property>
 		<property name="connection.driver_class">org.hsqldb.jdbcDriver</property>
@@ -27,7 +28,7 @@
 		<mapping class="it.synclab.patred.sem.persistence.entities.Order" />
 		<mapping class="it.synclab.patred.sem.persistence.entities.EmployeeOrder" />
 		<mapping class="it.synclab.patred.sem.persistence.entities.Client" />
-		<mapping class="it.synclab.patred.sem.persistence.entities.OrderDaily" />
+		<mapping class="it.synclab.patred.sem.persistence.entities.Timesheet" />
 
 
 	</session-factory>

@@ -12,6 +12,7 @@ import java.net.URISyntaxException;
 import javax.ws.rs.GET;
 import javax.ws.rs.Path;
 import javax.ws.rs.Produces;
+import javax.ws.rs.QueryParam;
 import javax.ws.rs.core.Response;
 import javax.ws.rs.core.Response.ResponseBuilder;
 import javax.ws.rs.core.Response.Status;
@@ -39,10 +40,13 @@ public class LogoutController extends BaseController {
 	@GET
 	@MustAuthenticate
 	@Produces("text/html; charset=utf-8")
-	public Response logout() throws URISyntaxException {
+	public Response logout(@QueryParam("from") String from) throws URISyntaxException {
+		String seeOther = "/";
+		if("backoffice".equals(from))
+			seeOther = seeOther + from;
 		if (user != null) {
 			userTokenService.remove(user.getUsername());
-			ResponseBuilder page = Response.seeOther(new URI("/"));
+			ResponseBuilder page = Response.seeOther(new URI(seeOther));
 			page = loginCookieManager.logout(page);
 			return page.build();
 		}
