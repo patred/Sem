@@ -12,6 +12,7 @@ import it.synclab.patred.sem.services.persistent.EmployeeOrderService;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
 import it.synclab.patred.sem.services.persistent.ManagerService;
 import it.synclab.patred.sem.services.persistent.OrderService;
+import it.synclab.patred.sem.services.persistent.TimesheetDetailService;
 import it.synclab.patred.sem.services.persistent.TimesheetService;
 import it.synclab.patred.sem.services.persistent.UserService;
 
@@ -45,6 +46,7 @@ public class Base {
 	protected static OrderService orderService;
 	protected static ClientService clientService;
 	protected static TimesheetService timesheetService;
+	protected static TimesheetDetailService timesheetDetailService;
 	protected static Constants constants;
 	
 	@BeforeClass
@@ -65,6 +67,7 @@ public class Base {
 		orderService = injector.getInstance(OrderService.class);
 		clientService = injector.getInstance(ClientService.class);
 		timesheetService = injector.getInstance(TimesheetService.class);
+		timesheetDetailService = injector.getInstance(TimesheetDetailService.class);
 		
 		constants = injector.getInstance(Constants.class);
 		
@@ -131,41 +134,46 @@ public class Base {
 	}
 	
 	protected void cleanDatabase() {
-		clearTimesheetService();
-		clearEmployeeOrderService();
-		clearEmployeeService();
-		clearManagerService();
-		clearOrderService();
-		clearUserService();
-		clearClientService();
+		clearClientTable();
+		clearEmployeeOrderTable();
+		clearEmployeeTable();
+		clearManagerTable();
+		clearOrderTable();
+		clearTimesheetDetailTable();
+		clearTimesheetTable();
+		clearUserTable();
 		
 	}
 	
-	private void clearUserService() {
+	private void clearTimesheetDetailTable() {
+		timesheetService.deleteAll();
+	}
+	
+	private void clearUserTable() {
 		userService.deleteAll();
 	}
 	
-	private void clearEmployeeService() {
+	private void clearEmployeeTable() {
 		employeeService.deleteAll();
 	}
 	
-	private void clearEmployeeOrderService() {
+	private void clearEmployeeOrderTable() {
 		employeeOrderService.deleteAll();
 	}
 	
-	private void clearManagerService() {
+	private void clearManagerTable() {
 		managerService.deleteAll();
 	}
 	
-	private void clearOrderService() {
+	private void clearOrderTable() {
 		orderService.deleteAll();
 	}
 	
-	private void clearClientService() {
+	private void clearClientTable() {
 		clientService.deleteAll();
 	}
 	
-	private void clearTimesheetService() {
+	private void clearTimesheetTable() {
 		timesheetService.deleteAll();
 	}
 	
