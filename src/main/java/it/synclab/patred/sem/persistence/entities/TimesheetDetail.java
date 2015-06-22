@@ -19,11 +19,12 @@ import javax.xml.bind.annotation.XmlRootElement;
 @XmlRootElement
 @NamedQueries({ @NamedQuery(name = "getAllTimesheetDetail", query = "select t from TimesheetDetail t"),
 		@NamedQuery(name = "getTimesheetDetail", query = "select t from TimesheetDetail t where t.id = :id"),
+		@NamedQuery(name = "getTimesheetDetailByTimesheet", query = "select t from TimesheetDetail t where t.timesheet = :timesheet order by t.id asc"),
 		@NamedQuery(name = "deleteAllTimesheetDetail", query = "delete from TimesheetDetail t") })
 public class TimesheetDetail implements Serializable {
 	
 	private static final long serialVersionUID = -2764439269938376123L;
-
+	
 	private Long id;
 	private Date day;
 	private Time ongoin;
@@ -71,7 +72,7 @@ public class TimesheetDetail implements Serializable {
 		return ongoout;
 	}
 	
-	public void setOngoOut(Time ongoout) {
+	public void setOngoout(Time ongoout) {
 		this.ongoout = ongoout;
 	}
 	

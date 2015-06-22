@@ -18,6 +18,8 @@ SEM.SemClient.Urls.timesheet = "services/timesheet";
 SEM.SemClient.Urls.timesheetDetails = "services/timesheet/detail/";
 SEM.SemClient.Urls.timesheetForm = "services/timesheet/form";
 SEM.SemClient.Urls.timesheetHistory = "services/timesheet/history";
+SEM.SemClient.Urls.timesheetDetailForm = "services/timesheet/detail/form";
+SEM.SemClient.Urls.confirmDetail = "services/timesheet/detail/form";
 
 SEM.SemClient.timesheet = function(callback) {
 	$.get(SEM.SemClient.Urls.timesheet, function(data) {
@@ -139,5 +141,54 @@ SEM.SemClient.delTimesheetForm = function(id) {
 
 SEM.SemClient.timesheetDetails = function(id) {
 	$.get(SEM.SemClient.Urls.timesheetDetails + id, function(data) {
+		$("#main").html(data);
+		$("#Theader").hide();
 	});
+};
+
+SEM.SemClient.timesheetDetailForm = function() {
+	$.get(SEM.SemClient.Urls.timesheetDetailForm, function(data) {
+		$("#detailForm").append(data);
+		$("#addDetailForm").hide();
+	});
+};
+
+SEM.SemClient.confirmDetail	= function(callback){
+	var obj = {};
+	obj.day = $('#detail-day').val();
+	obj.ongoin = $('#detail-ongoin').val();
+	obj.ongoout = $('#detail-ongoout').val();
+	obj.hours = $('#detail-hours').val();
+	obj.picap = $('#detail-picap').val();
+	obj.availability = $('#detail-availability').val();
+	obj.note = $('#detail-note').val();
+	obj.transfer = $('#detail-transfer').val();
+	obj.code = $('#detail-code').val();
+	obj.orderId = $('#detail-orderId').val();
+	$.ajax(
+		{
+			url: SEM.SemClient.Urls.confirmDetail, 
+			type: "POST",
+			data: JSON.stringify(obj), 
+		    headers: { 
+		        "Accept" : "application/json",
+		        "Content-Type": "application/json"
+		    },
+			success: function(data, textStatus, jqXHR) {
+				if (callback != undefined)
+					callback(true);
+				SEM.SemClient.timesheet();
+			},
+			error: function(jqXHR, textStatus, errorThrown) {
+				var data = {error: "generic"}; 
+				try {
+					data = $.parseJSON(jqXHR.responseText);					
+				} catch (e) {
+					//nothing
+				}
+				if (callback != undefined)
+					callback(false);
+			}
+		}
+	);
 };

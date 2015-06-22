@@ -135,12 +135,12 @@ public class Base {
 	
 	protected void cleanDatabase() {
 		clearClientTable();
+		clearTimesheetDetailTable();
+		clearTimesheetTable();
 		clearEmployeeOrderTable();
 		clearEmployeeTable();
 		clearManagerTable();
 		clearOrderTable();
-		clearTimesheetDetailTable();
-		clearTimesheetTable();
 		clearUserTable();
 		
 	}

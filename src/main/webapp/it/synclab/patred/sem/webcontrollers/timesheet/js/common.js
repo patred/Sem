@@ -37,3 +37,11 @@ delTimesheet = function(callback) {
 timesheetDetails = function() {
 	SEM.SemClient.timesheetDetails($('#timesheetID').val());
 };
+
+addDetailForm = function() {
+	SEM.SemClient.timesheetDetailForm();
+};
+
+confirmDetail = function() {
+	SEM.SemClient.confirmDetail();
+};

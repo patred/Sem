@@ -1,7 +1,7 @@
 package it.synclab.patred.sem.persistence.entities;
 
 public enum Code {
-	TR("Trasferta"), SD("Sede Disagiata");
+	NONE(""), TR("Trasferta"), SD("Sede Disagiata");
 	private String description;
 	
 	private Code(String description) {

@@ -5,8 +5,10 @@ import it.synclab.patred.sem.annotations.MustAuthenticate;
 import it.synclab.patred.sem.annotations.Transactional;
 import it.synclab.patred.sem.persistence.entities.Employee;
 import it.synclab.patred.sem.persistence.entities.Timesheet;
+import it.synclab.patred.sem.persistence.entities.TimesheetDetail;
 import it.synclab.patred.sem.persistence.entities.User;
 import it.synclab.patred.sem.services.persistent.EmployeeService;
+import it.synclab.patred.sem.services.persistent.TimesheetDetailService;
 import it.synclab.patred.sem.services.persistent.TimesheetService;
 import it.synclab.patred.sem.webcontrollers.BaseWebController;
 
@@ -47,6 +49,9 @@ public class TimesheetController extends BaseWebController {
 	@Inject
 	private TimesheetService timesheetService;
 	
+	@Inject
+	private TimesheetDetailService timesheetDetailService;
+	
 	@Context
 	HttpServletRequest request;
 	
@@ -71,11 +76,22 @@ public class TimesheetController extends BaseWebController {
 	@MustAuthenticate
 	@Path("detail/{id}")
 	@Produces("text/html; charset=utf-8")
-	public Response getTimesheetDetail(@PathParam("id") Long id) {
+	public Viewable getTimesheetDetail(@PathParam("id") Long id) {
 		HashMap<String, Object> model = createParameterBean();
 		Timesheet timesheet = timesheetService.get(id);
-		logger.info("{}", timesheet);
-		return Response.ok().build();
+		List<TimesheetDetail> timesheetDetails = timesheetDetailService.getTimesheetDetailByTimesheet(timesheet);
+		logger.info("Trovati {} Dettagli", timesheetDetails.size());
+		model.put("tDetails", timesheetDetails);
+		return new Viewable("timesheetDetail.jsp", model);
+	}
+	
+	@GET
+	@MustAuthenticate
+	@Path("detail/form")
+	@Produces("text/html; charset=utf-8")
+	public Viewable getTimesheetDetailForm() {
+		HashMap<String, Object> model = createParameterBean();
+		return new Viewable("detail.jsp", model);
 	}
 	
 	@GET
@@ -115,6 +131,19 @@ public class TimesheetController extends BaseWebController {
 		timesheet.setEmployee(employee);
 		logger.info("After: " + timesheet);
 		timesheetService.save(timesheet);
+		return Response.ok().build();
+	}
+	
+	@POST
+	@MustAuthenticate
+	@Path("detail")
+	@Consumes(MediaType.APPLICATION_JSON)
+	public Response addTimesheetDetailForm(TimesheetDetail timesheetDetail) {
+		if (timesheetDetail == null)
+			return Response.status(Status.BAD_REQUEST).build();
+		
+		logger.info("timesheetDetail: " + timesheetDetail);
+		timesheetDetailService.save(timesheetDetail);
 		return Response.ok().build();
 	}
 	

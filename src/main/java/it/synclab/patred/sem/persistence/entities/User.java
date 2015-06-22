@@ -122,7 +122,7 @@ public class User implements Serializable {
 	
 	@Override
 	public String toString() {
-		return "User [username=" + username + ", password=" + Arrays.toString(password) + ", salt=" + Arrays.toString(salt) + ", role=" + role + "]";
+		return "User [username=" + username + ", role=" + role + "]";
 	}
 	
 }
