@@ -8,6 +8,7 @@
 
 	<listener>
 		<listener-class>it.synclab.patred.sem.listener.ApplicationListener</listener-class>
+		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
 	</listener>
 
 	<session-config>
@@ -28,6 +29,16 @@
 		<url-pattern>/application.wadl/*</url-pattern>
 	</filter-mapping>
 
+	<servlet>
+		<servlet-name>WSEndpoints</servlet-name>
+		<servlet-class>com.sun.xml.ws.transport.http.servlet.WSServlet</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+	<servlet-mapping>
+		<servlet-name>WSEndpoints</servlet-name>
+		<url-pattern>/ws/*</url-pattern>
+	</servlet-mapping>
+	
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>

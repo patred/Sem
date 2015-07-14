@@ -5,7 +5,6 @@ import it.synclab.patred.sem.util.PasswordEncryption;
 import java.io.Serializable;
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
-import java.util.Arrays;
 
 import javax.persistence.Entity;
 import javax.persistence.Id;

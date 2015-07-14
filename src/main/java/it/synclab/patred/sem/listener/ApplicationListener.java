@@ -6,6 +6,7 @@ import it.synclab.patred.sem.modules.SemWebModule;
 import it.synclab.patred.sem.services.InfinispanService;
 import it.synclab.patred.sem.services.persistent.HibernateSessionService;
 import it.synclab.patred.sem.util.LogUtils;
+import it.synclab.patred.sem.ws.GuiceManagedInstanceResolver;
 
 import java.security.NoSuchAlgorithmException;
 import java.security.spec.InvalidKeySpecException;
@@ -68,6 +69,8 @@ public class ApplicationListener extends GuiceServletContextListener {
 		 */
 		
 		checkAllDefaultDataOnBD();
+		
+		GuiceManagedInstanceResolver.setInjector(injector);
 		
 		injector.getInstance(InfinispanService.class);
 

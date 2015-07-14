@@ -1,10 +1,9 @@
 package it.synclab.patred.sem.aop;
 
-import javax.ws.rs.core.Response;
-import javax.ws.rs.core.Response.Status;
-
 import it.synclab.patred.sem.exception.SemRestException;
 import it.synclab.patred.sem.util.LogUtils;
+
+import javax.ws.rs.core.Response;
 
 import org.aopalliance.intercept.MethodInterceptor;
 import org.aopalliance.intercept.MethodInvocation;

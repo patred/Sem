@@ -101,6 +101,29 @@
 					</dependency>
 				</dependencies>
 			</plugin>
+
+			<plugin>
+				<groupId>org.jvnet.jax-ws-commons</groupId>
+				<artifactId>jaxws-maven-plugin</artifactId>
+				<version>2.2</version>
+				<executions>
+					<execution>
+						<id>Execution WsGen Employee</id>
+						<phase>process-classes</phase>
+						<goals>
+							<goal>wsgen</goal>
+						</goals>
+						<inherited>false</inherited>
+						<configuration>
+							<sei>it.synclab.patred.sem.ws.ESBInterfaceEmployeeImpl</sei>
+							<genWsdl>true</genWsdl>
+							<keep>true</keep>
+							<verbose>true</verbose>
+						</configuration>
+					</execution>
+				</executions>
+			</plugin>
+					
 		</plugins>
 	</build>
 	<repositories>
@@ -328,6 +351,12 @@
 			<groupId>org.infinispan</groupId>
 			<artifactId>infinispan-core</artifactId>
 			<version>${infinispan.version}</version>
+		</dependency>
+
+		<dependency>
+			<groupId>com.sun.xml.ws</groupId>
+			<artifactId>jaxws-rt</artifactId>
+			<version>2.2.6</version>
 		</dependency>
 
 		<dependency>
