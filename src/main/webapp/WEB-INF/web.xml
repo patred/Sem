@@ -1,4 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
+
 <web-app xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xmlns="http://java.sun.com/xml/ns/javaee" xmlns:web="http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
 	xsi:schemaLocation="http://java.sun.com/xml/ns/javaee http://java.sun.com/xml/ns/javaee/web-app_2_5.xsd"
@@ -6,8 +7,17 @@
 
 	<display-name>Synclab Employees Manager</display-name>
 
+	<servlet>
+		<servlet-name>Synclab Employees Manager</servlet-name>
+		<servlet-class>it.synclab.patred.sem.listener.ApplicationListener</servlet-class>
+		<load-on-startup>1</load-on-startup>
+	</servlet>
+
+<!-- 	<listener> -->
+<!-- 		<listener-class>it.synclab.patred.sem.listener.ApplicationListener</listener-class> -->
+<!-- 	</listener> -->
+
 	<listener>
-		<listener-class>it.synclab.patred.sem.listener.ApplicationListener</listener-class>
 		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
 	</listener>
 
@@ -38,7 +48,7 @@
 		<servlet-name>WSEndpoints</servlet-name>
 		<url-pattern>/ws/*</url-pattern>
 	</servlet-mapping>
-	
+
 	<welcome-file-list>
 		<welcome-file>index.html</welcome-file>
 	</welcome-file-list>
