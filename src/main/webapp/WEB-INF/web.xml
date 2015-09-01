@@ -13,10 +13,6 @@
 		<load-on-startup>1</load-on-startup>
 	</servlet>
 
-<!-- 	<listener> -->
-<!-- 		<listener-class>it.synclab.patred.sem.listener.ApplicationListener</listener-class> -->
-<!-- 	</listener> -->
-
 	<listener>
 		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
 	</listener>
