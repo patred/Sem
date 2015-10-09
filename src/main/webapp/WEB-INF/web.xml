@@ -7,11 +7,9 @@
 
 	<display-name>Synclab Employees Manager</display-name>
 
-	<servlet>
-		<servlet-name>Synclab Employees Manager</servlet-name>
-		<servlet-class>it.synclab.patred.sem.listener.ApplicationListener</servlet-class>
-		<load-on-startup>1</load-on-startup>
-	</servlet>
+	<listener>
+		<listener-class>it.synclab.patred.sem.listener.ApplicationListener</listener-class>
+	</listener>
 
 	<listener>
 		<listener-class>com.sun.xml.ws.transport.http.servlet.WSServletContextListener</listener-class>
