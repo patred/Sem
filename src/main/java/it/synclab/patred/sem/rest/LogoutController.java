@@ -41,9 +41,9 @@ public class LogoutController extends BaseController {
 	@MustAuthenticate
 	@Produces("text/html; charset=utf-8")
 	public Response logout(@QueryParam("from") String from) throws URISyntaxException {
-		String seeOther = "/";
+		String seeOther = from == null ? "/" : from;
 		if("backoffice".equals(from))
-			seeOther = seeOther + from;
+			seeOther = "/" + from;
 		if (user != null) {
 			userTokenService.remove(user.getUsername());
 			ResponseBuilder page = Response.seeOther(new URI(seeOther));
