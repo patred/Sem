@@ -381,7 +381,7 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			});
 			
 			var combo = Y.one('#userDialogForm_Role');
-			addOption("Employee", combo, true);
+			addOption("Employee", combo, true); 
 			addOption("Manager", combo, true);
 			
 			YContainer.UserDialogForm.dialog.onCancel = function() {
@@ -449,12 +449,12 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			    ]
 			});
 			
-			var myColumnDef = [
-			                { key : "id",		label : "ID",		sortable : true, 	resizeable:false, width: 50},
-			                { key : "surname",	label : "Cognome",	sortable : true, 	resizeable:false, width: 200},
-			   			    { key : "name",		label : "Nome",		sortable : true, 	resizeable:false, width: 200},
-			   			    { key : "role",		label : "Ruolo",	sortable : false,	resizeable:false },
-			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable:true, width: 50, allowHTML: true,
+			var myColumnDef = [ /* è una YUI DataTable */
+			                { key : "id",		label : "ID",		sortable : true, 	resizeable : false, width: 50},
+			                { key : "surname",	label : "Cognome",	sortable : true, 	resizeable : false, width: 200},
+			   			    { key : "name",		label : "Nome",		sortable : true, 	resizeable : false, width: 200},
+			   			    { key : "role",		label : "Ruolo",	sortable : false,	resizeable : false },
+			   			    { key : "username",	label : "Username",	sortable : true, 	resizeable : true, width: 50, allowHTML: true,
 			   			    	formatter: function(o) {
 			   			    		return o.value == null ? "N.A." : o.value;
 			   			    	}
@@ -462,10 +462,21 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			   			    { key : "nOrders",  label : "N. Ordini",sortable : true,	resizeable:false, width: 50,
 			   			    	formatter: function(o){
 			   			    		var orders = SEM.BussinessMethos.getNOrder(o.data.id);
-			   			    		var count = orders.responseXML.childNodes[0].childElementCount;
-			   			    		return orders.responseXML.childNodes[0].childElementCount;
+			   			    		return orders.responseXML.childNodes[0].childElementCount; 
 			   		             }
-			   		        }
+			   		        },
+			   			    { key : "IDOrders", label : "ID Ordini", sortable : true, resizeable : false, width: 50, allowHTML: true,
+			   			        formatter: function(o){
+			   			        	
+			   			        	var orders = SEM.BussinessMethos.getNOrder(o.data.id);
+			   			        	var select = "<select>";
+			   			        	for(var i = 0; i < orders.responseXML.childNodes[0].childElementCount; i++)
+			   			        	    select += "<option style = 'color:red'>" + orders.responseXML.childNodes[0].childNodes[i].getElementsByTagName("order")[0].getElementsByTagName("id")[0].firstChild.nodeValue + "</option>";
+			   			        	select += "</select>";
+			   			        	return select;
+			   			        
+			   		             }
+			   			    }
 			   			   ];
 			var myDataSource = new Y.DataSource.IO({
 				source: server + 'employee'
@@ -479,7 +490,8 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			           {key:"surname", locator:"surname"},
 			           {key:"name", locator:"name"},
                        {key:"role", locator:"role"},
-                       {key:"username", locator:"user/username"}
+                       {key:"username", locator:"user/username"},
+                       {key:"IDOrders", locator:""}
 			        ]
 			    }
 			});
@@ -599,7 +611,8 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 					         ]
 				}
 			});
-			
+	
+		
 			YContainer.EmployeeDialogForm.dialog.onCancel = function() {
 				YContainer.EmployeeDialogForm.dialog.hide();
 			};
@@ -1494,6 +1507,15 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 					         ]
 				}
 			});
+	
+			var combo = Y.one('#orderDialogForm_Pattern');
+				
+			addOption("@@@000", combo, true); 
+			addOption("***000", combo, true);
+			addOption("@@**00", combo, true);
+			addOption("@*0@*0", combo, true);
+			addOption("0*@@*0", combo, true);
+			addOption("*0@0*@", combo, true);
 			
 			YContainer.OrderDialogForm.dialog.onCancel = function() {
 				YContainer.OrderDialogForm.dialog.hide();
@@ -1502,8 +1524,9 @@ YUI().use("node", "node-menunav", "panel", "dd-plugin", "transition", "io-form",
 			YContainer.OrderDialogForm.dialog.onOk = function() {
 				YContainer.waitDialog.show();
 				var order = YContainer.OrderDialogForm.currentRecord;
-				order.setDescription(Y.one('#orderDialogForm_Descr').get('value'));
-				order.setCode(Y.one('#orderDialogForm_Code').getHTML());
+				var pattern = (Y.one('#orderDialogForm_Suffix').get('value') != "") ? Y.one('#orderDialogForm_Suffix').get('value') : Y.one('#orderDialogForm_Pattern').get('value');
+			    order.setDescription(Y.one('#orderDialogForm_Descr').get('value'));
+				order.setPattern(pattern);
 				SEM.BussinessMethos.saveBussinesObject(order);
 				YContainer.OrderDialogForm.dialog.hide();
 				YContainer.waitDialog.hide();
