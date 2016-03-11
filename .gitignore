@@ -9,3 +9,5 @@ target/
 /sem.log
 /sem.properties
 /sem.script
+.idea
+synclab-employees-manager.iml
